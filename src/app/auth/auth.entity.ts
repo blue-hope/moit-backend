@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { User } from '@app/user/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 @Entity()
 export class Auth {

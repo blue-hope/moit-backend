@@ -2,32 +2,32 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  OneToOne,
+  ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { IsDate, IsEmail, IsPhoneNumber, IsString } from 'class-validator';
-import { Auth } from '@app/auth/auth.entity';
-import { ApiProperty, OmitType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsDate, IsNumber, IsString } from 'class-validator';
+import { Category } from '@app/category/category.entity';
 import { CastedColumn } from '@config/test/test.sqlite';
 import { Region } from '@app/region/region.entity';
+import { Menu } from '@app/menu/menu.entity';
+import { Fee } from '@app/fee/fee.entity';
 import { Order } from '@app/order/order.entity';
-import { Participant } from '@app/participant/participant.entity';
 
 @Entity()
-export class User {
+export class Restaurant {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
   @ApiProperty()
-  @IsDate()
-  @OneToOne(() => Auth, (auth) => auth.user, {
-    cascade: true,
+  @ManyToOne(() => Category, (category) => category.restaurants, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   })
-  auth: Auth;
+  category: Category;
 
   @ApiProperty()
   @ManyToOne(() => Region, (region) => region.restaurants, {
@@ -37,31 +37,43 @@ export class User {
   region: Region;
 
   @ApiProperty()
+  @OneToMany(() => Menu, (menu) => menu.restaurant, {
+    cascade: true,
+  })
+  menus: Menu[];
+
+  @ApiProperty()
+  @OneToMany(() => Fee, (fee) => fee.restaurant, {
+    cascade: true,
+  })
+  fees: Fee[];
+
+  @ApiProperty()
   @OneToMany(() => Order, (order) => order.restaurant, {
     cascade: true,
   })
   orders: Order[];
 
   @ApiProperty()
-  @OneToMany(() => Participant, (participant) => participant.user, {
-    cascade: true,
-  })
-  participants: Participant[];
-
-  @ApiProperty()
-  @IsEmail()
-  @Column({ unique: true })
-  email: string;
-
-  @ApiProperty()
   @IsString()
   @Column()
-  name: string;
+  account: string;
 
   @ApiProperty()
-  @IsPhoneNumber()
-  @Column({ unique: true })
-  phoneNumber: string;
+  @IsDate()
+  @CastedColumn({
+    type: 'timestamp',
+    name: 'open_at',
+  })
+  openAt: Date;
+
+  @ApiProperty()
+  @IsDate()
+  @CastedColumn({
+    type: 'timestamp',
+    name: 'close_at',
+  })
+  closeAt: Date;
 
   @ApiProperty()
   @IsDate()
@@ -81,5 +93,3 @@ export class User {
   })
   updatedAt: Date;
 }
-
-export class UserWithoutAuth extends OmitType(User, ['auth'] as const) {}
