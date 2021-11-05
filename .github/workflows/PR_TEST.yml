@@ -1,0 +1,20 @@
+name: Github Action CI
+
+on:
+  pull_request:
+    branches: [develop]
+jobs:
+  jest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: install modules
+        run: yarn
+      - name: install sqlite3
+        run: npm install sqlite3 --save
+      - name: run test
+        run: yarn test:cov
+      - name: codecov
+        run: ./node_modules/.bin/codecov --token=$token
+    env:
+      token: 3c90ebfa-31d0-4a38-be8c-74341e2fd06e

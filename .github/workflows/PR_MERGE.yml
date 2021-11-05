@@ -1,0 +1,20 @@
+name: Github Action CI
+
+on:
+  pull_request:
+    branches: [develop]
+    types: [closed]
+jobs:
+  jest:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: install modules
+        run: yarn
+      - name: run test
+        run: yarn test:cov
+      - name: codecov
+        run: ./node_modules/.bin/codecov --token=$token
+    env:
+      token: 3c90ebfa-31d0-4a38-be8c-74341e2fd06e
