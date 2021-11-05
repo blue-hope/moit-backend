@@ -11,16 +11,19 @@ export class Region {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({ type: () => [Restaurant] })
   @OneToMany(() => Restaurant, (restaurant) => restaurant.region, {
     cascade: true,
   })
   restaurants: Restaurant[];
 
+  @ApiProperty({ type: () => [User] })
   @OneToMany(() => User, (user) => user.region, {
     cascade: true,
   })
   users: User[];
 
+  @ApiProperty({ type: () => [University] })
   @OneToMany(() => University, (university) => university.region, {
     cascade: true,
   })

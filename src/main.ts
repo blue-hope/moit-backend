@@ -10,7 +10,7 @@ import { json } from 'express';
 
 async function prepareSwagger(app: INestApplication) {
   const options = new DocumentBuilder()
-    .setTitle('')
+    .setTitle('Moit Api Docs')
     .setDescription('Api Docs')
     .setVersion('1.0')
     .addTag('user')

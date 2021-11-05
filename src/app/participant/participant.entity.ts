@@ -17,14 +17,14 @@ export class Participant {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Order })
   @ManyToOne(() => Order, (order) => order.participants, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   order: Order;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => User })
   @ManyToOne(() => User, (user) => user.participants, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

@@ -9,7 +9,7 @@ export class Menu {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Restaurant })
   @ManyToOne(() => Restaurant, (restaurant) => restaurant.menus, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

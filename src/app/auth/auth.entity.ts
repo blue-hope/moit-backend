@@ -15,7 +15,7 @@ export class Auth {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => User })
   @OneToOne(() => User, (user) => user.auth, {
     onDelete: 'CASCADE',
   })

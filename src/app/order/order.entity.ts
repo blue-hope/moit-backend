@@ -21,27 +21,27 @@ export class Order {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Restaurant })
   @ManyToOne(() => Restaurant, (restaurant) => restaurant.orders, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   restaurant: Restaurant;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => User })
   @ManyToOne(() => User, (user) => user.orders, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   writer: User;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => [Participant] })
   @OneToMany(() => Participant, (participant) => participant.user, {
     cascade: true,
   })
   participants: Participant[];
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Fee })
   @ManyToOne(() => Fee)
   fee: Fee;
 

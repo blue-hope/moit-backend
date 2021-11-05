@@ -16,13 +16,14 @@ export class University {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Region })
   @ManyToOne(() => Region, (region) => region.restaurants, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   region: Region;
 
+  @ApiProperty({ type: () => [Menu] })
   @OneToMany(() => Menu, (menu) => menu.restaurant, {
     cascade: true,
   })

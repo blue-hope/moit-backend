@@ -1,3 +1,3 @@
-export class loginResponse {
+export class Loginresponse {
   access_token: string;
 }

@@ -5,14 +5,7 @@ import { IdOmitType } from '@util/id_omit_type';
 import { IsString, Matches } from 'class-validator';
 
 export class CreateUserDto extends IntersectionType(
-  IdOmitType(User, [
-    'auth',
-    'region',
-    'participants',
-    'orders',
-    'createdAt',
-    'updatedAt',
-  ] as const),
+  IdOmitType(User, ['auth', 'createdAt', 'updatedAt'] as const),
   IdOmitType(Auth, ['user', 'salt'] as const), // not partial, password needed on any case
 ) {
   @IsString()

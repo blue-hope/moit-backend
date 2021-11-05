@@ -22,27 +22,26 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty()
-  @IsDate()
+  @ApiProperty({ type: () => Auth })
   @OneToOne(() => Auth, (auth) => auth.user, {
     cascade: true,
   })
   auth: Auth;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Region })
   @ManyToOne(() => Region, (region) => region.restaurants, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   region: Region;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => [Order] })
   @OneToMany(() => Order, (order) => order.restaurant, {
     cascade: true,
   })
   orders: Order[];
 
-  @ApiProperty()
+  @ApiProperty({ type: () => [Participant] })
   @OneToMany(() => Participant, (participant) => participant.user, {
     cascade: true,
   })

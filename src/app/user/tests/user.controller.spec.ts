@@ -54,9 +54,9 @@ describe('UserController', () => {
         .expect(HttpStatus.BAD_REQUEST);
     });
 
-    it('checkIdDuplicate', async () => {
+    it('isNewUser', async () => {
       return await request(app.getHttpServer())
-        .get('/api/v1/user/check?email=any%40email.com')
+        .get('/api/v1/user/is-new-user?email=any%40email.com')
         .expect(HttpStatus.OK);
     });
 
@@ -95,7 +95,7 @@ describe('UserController', () => {
         .expect(HttpStatus.BAD_REQUEST);
     });
 
-    it('destroy - Success', async () => {
+    it('delete - Success', async () => {
       return await request(app.getHttpServer())
         .delete('/api/v1/user')
         .set('Authorization', 'bearer token')

@@ -9,6 +9,7 @@ export class Category {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({ type: () => [Restaurant] })
   @OneToMany(() => Restaurant, (restaurant) => restaurant.category, {
     cascade: true,
   })

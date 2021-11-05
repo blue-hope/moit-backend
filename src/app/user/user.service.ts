@@ -8,8 +8,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserWithoutAuth } from '@app/user/user.entity';
 import { AuthService } from '@app/auth/auth.service';
-import { createUserDto, updateUserDto } from '@type/user/user.dto';
-import { createOrUpdateAuthDto } from '@type/auth/auth.dto';
+import { CreateUserDto, UpdateUserDto } from '@type/user/user.dto';
+import { CreateOrUpdateAuthDto } from '@type/auth/auth.dto';
 
 @Injectable()
 export class UserService {
@@ -31,18 +31,15 @@ export class UserService {
     });
   }
 
-  async checkIdDuplicate(email: string): Promise<boolean> {
-    if ((await this.findOneByEmail(email)) === undefined) {
-      return false;
-    }
-    return true;
+  async isNewUser(email: string): Promise<boolean> {
+    return (await this.findOneByEmail(email)) === undefined;
   }
 
-  async create(createUserDto: createUserDto): Promise<UserWithoutAuth> {
-    const { password, ...userDto } = createUserDto;
+  async create(CreateUserDto: CreateUserDto): Promise<UserWithoutAuth> {
+    const { password, ...userDto } = CreateUserDto;
     let user = await this.userRepository.create(userDto);
     user = await this.userRepository.save(user);
-    const createAuthDto: createOrUpdateAuthDto = {
+    const createAuthDto: CreateOrUpdateAuthDto = {
       password,
       user: user,
     };
@@ -61,9 +58,9 @@ export class UserService {
 
   async update(
     user: User,
-    updateUserDto: updateUserDto,
+    UpdateUserDto: UpdateUserDto,
   ): Promise<UserWithoutAuth> {
-    const { password, originalPassword, ...userDto } = updateUserDto;
+    const { password, originalPassword, ...userDto } = UpdateUserDto;
     if (await this.authService.validateUser(user.email, originalPassword)) {
       // update auth
       await this.authService.update({
@@ -84,8 +81,7 @@ export class UserService {
     return await this.userRepository.findOne(user.id);
   }
 
-  async destroy(user: User): Promise<UserWithoutAuth> {
-    const userToDestroy = await this.userRepository.findOne(user.id);
-    return await this.userRepository.remove(userToDestroy);
+  async delete(user: User) {
+    await this.userRepository.delete(user.id);
   }
 }

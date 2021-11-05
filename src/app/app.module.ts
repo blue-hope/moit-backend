@@ -5,6 +5,8 @@ import { AppService } from '@app/app.service';
 import { UserModule } from '@app/user/user.module';
 import { AuthModule } from '@app/auth/auth.module';
 import { DefaultAdminModule } from 'nestjs-admin';
+import { CategoryModule } from './category/category.module';
+import { RestaurantModule } from './restaurant/restaurant.module';
 
 @Module({
   imports: [
@@ -12,7 +14,9 @@ import { DefaultAdminModule } from 'nestjs-admin';
     TypeOrmModule.forRoot(),
     UserModule,
     AuthModule,
-    DefaultAdminModule,
+    CategoryModule,
+    RestaurantModule,
+    // DefaultAdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

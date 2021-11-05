@@ -31,6 +31,7 @@ describe('UserService', () => {
       email: email,
       name: 'name',
       password: 'password',
+      phoneNumber: '010-1234-5678',
     });
     expect(result).toBeInstanceOf(User);
     expect(result).toMatchObject({
@@ -46,6 +47,7 @@ describe('UserService', () => {
         email: email,
         name: 'name',
         password: 'password',
+        phoneNumber: '010-1234-5678',
       });
     } catch (e) {
       expect(e).toBeInstanceOf(QueryFailedError);
@@ -62,14 +64,14 @@ describe('UserService', () => {
     expect(result).toBe(undefined);
   });
 
-  it('checkIdDuplicate - Success(duplicated)', async () => {
-    const result = await service.checkIdDuplicate(email);
+  it('isNewUser - Success(non-duplicated)', async () => {
+    const newEmail = 'new@email.com';
+    const result = await service.isNewUser(newEmail);
     expect(result).toBe(true);
   });
 
-  it('checkIdDuplicate - Fail(non-duplicated)', async () => {
-    const newEmail = 'new@email.com';
-    const result = await service.checkIdDuplicate(newEmail);
+  it('isNewUser - Fail(duplicated)', async () => {
+    const result = await service.isNewUser(email);
     expect(result).toBe(false);
   });
 
@@ -93,33 +95,33 @@ describe('UserService', () => {
 
   it('update - Success', async () => {
     const user = await service.findOneByEmail(email);
-    const updateUserDto = {
+    const UpdateUserDto = {
       originalPassword: 'password',
       password: 'newPassword',
       name: 'newName',
     };
-    const updateResult = await service.update(user, updateUserDto);
-    expect(updateResult.name).toBe(updateUserDto.name);
+    const updateResult = await service.update(user, UpdateUserDto);
+    expect(updateResult.name).toBe(UpdateUserDto.name);
     const updatedUser = await authService.validateUser(
       email,
-      updateUserDto.password,
+      UpdateUserDto.password,
     );
     expect(updatedUser).toBeInstanceOf(User);
   });
 
-  it('destroy - Fail', async () => {
+  it('delete - Fail', async () => {
     const user = await service.findOneByEmail(email);
     user.id = 0;
     try {
-      await service.destroy(user);
+      await service.delete(user);
     } catch (e) {
       expect(e).toBeInstanceOf(MustBeEntityError);
     }
   });
 
-  it('destroy - Success', async () => {
+  it('delete - Success', async () => {
     const user = await service.findOneByEmail(email);
-    const result = await service.destroy(user);
+    const result = await service.delete(user);
     expect(result).toBeInstanceOf(User);
     const deletedUser = await service.findOneByEmail(email);
     expect(deletedUser).toBe(undefined);

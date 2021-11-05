@@ -17,7 +17,7 @@ export class Fee {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Restaurant })
   @ManyToOne(() => Restaurant, (restaurant) => restaurant.menus, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

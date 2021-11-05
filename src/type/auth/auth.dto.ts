@@ -1,9 +1,9 @@
 import { Auth } from '@app/auth/auth.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IdOmitType } from '@util/id_omit_type';
-import { IsEmail, IsEnum, IsNumber, IsString, Matches } from 'class-validator';
+import { IsEmail, IsNumber, IsString, Matches } from 'class-validator';
 
-export class jwtDataDto {
+export class JwtDataDto {
   @ApiProperty()
   @IsEmail()
   email: string;
@@ -30,7 +30,7 @@ export class jwtPayloadDto {
   sub: number;
 }
 
-export class createOrUpdateAuthDto extends IdOmitType(Auth, ['salt']) {
+export class CreateOrUpdateAuthDto extends IdOmitType(Auth, ['salt']) {
   @ApiProperty()
   @IsString()
   @Matches(

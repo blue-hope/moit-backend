@@ -22,33 +22,33 @@ export class Restaurant {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Category })
   @ManyToOne(() => Category, (category) => category.restaurants, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   category: Category;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Region })
   @ManyToOne(() => Region, (region) => region.restaurants, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   region: Region;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => [Menu] })
   @OneToMany(() => Menu, (menu) => menu.restaurant, {
     cascade: true,
   })
   menus: Menu[];
 
-  @ApiProperty()
+  @ApiProperty({ type: () => [Fee] })
   @OneToMany(() => Fee, (fee) => fee.restaurant, {
     cascade: true,
   })
   fees: Fee[];
 
-  @ApiProperty()
+  @ApiProperty({ type: () => [Order] })
   @OneToMany(() => Order, (order) => order.restaurant, {
     cascade: true,
   })

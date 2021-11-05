@@ -6,8 +6,8 @@ import { QueryFailedError, Repository } from 'typeorm';
 import { UserService } from '@app/user/user.service';
 import { User, UserWithoutAuth } from '@app/user/user.entity';
 import { Auth } from '@app/auth/auth.entity';
-import { loginResponse } from '@type/auth/auth.resp';
-import { createOrUpdateAuthDto, jwtPayloadDto } from '@type/auth/auth.dto';
+import { Loginresponse } from '@type/auth/auth.resp';
+import { CreateOrUpdateAuthDto, jwtPayloadDto } from '@type/auth/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +33,7 @@ export class AuthService {
     return null;
   }
 
-  async login(user: UserWithoutAuth): Promise<loginResponse> {
+  async login(user: UserWithoutAuth): Promise<Loginresponse> {
     const payload: jwtPayloadDto = {
       email: user.email,
       sub: user.id,
@@ -43,7 +43,7 @@ export class AuthService {
     };
   }
 
-  async create(createAuthDto: createOrUpdateAuthDto): Promise<Auth> {
+  async create(createAuthDto: CreateOrUpdateAuthDto): Promise<Auth> {
     const { password, salt } = await this.createNewPassword(
       createAuthDto.password,
     );
@@ -61,7 +61,7 @@ export class AuthService {
     }
   }
 
-  async update(updateAuthDto: createOrUpdateAuthDto): Promise<boolean> {
+  async update(updateAuthDto: CreateOrUpdateAuthDto): Promise<boolean> {
     const { user } = updateAuthDto;
     const { password, salt } = await this.createNewPassword(
       updateAuthDto.password,
@@ -71,7 +71,7 @@ export class AuthService {
       password,
       salt,
     };
-    const updatedAuth = await this.authRepository.update(user.auth, authDto);
+    await this.authRepository.update(user.auth, authDto);
     return true;
   }
 
