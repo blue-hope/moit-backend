@@ -23,11 +23,11 @@ export class MenuController {
   constructor() {}
 
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'read', description: 'Menu Read' })
   @ApiBody({ type: [Menu] })
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
+  @HttpCode(HttpStatus.OK)
   @Get()
   async readAll(@Request() req): Promise<Menu[] | void> {}
 }

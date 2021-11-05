@@ -4,84 +4,49 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User, UserWithoutAuth } from '@app/user/user.entity';
+import { User } from '@app/user/user.entity';
 import { AuthService } from '@app/auth/auth.service';
-import { CreateUserDto, UpdateUserDto } from '@type/user/user.dto';
-import { CreateOrUpdateAuthDto } from '@type/auth/auth.dto';
+import { CreateRequest, UpdateRequest } from '@type/user/user.req';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
   ) {}
 
-  async findOneByEmail(email: string): Promise<User | undefined> {
-    return this.userRepository.findOne({
-      relations: ['auth'],
-      where: (qb) => {
-        qb.where({
-          email: email,
-        });
-      },
-    });
-  }
-
-  async isNewUser(email: string): Promise<boolean> {
-    return (await this.findOneByEmail(email)) === undefined;
-  }
-
-  async create(CreateUserDto: CreateUserDto): Promise<UserWithoutAuth> {
-    const { password, ...userDto } = CreateUserDto;
-    let user = await this.userRepository.create(userDto);
-    user = await this.userRepository.save(user);
-    const createAuthDto: CreateOrUpdateAuthDto = {
-      password,
-      user: user,
-    };
-    await this.authService.create(createAuthDto);
+  async create(CreateRequest: CreateRequest): Promise<User> {
+    const { password, ...userDto } = CreateRequest;
+    const user = await User.create(userDto).save();
+    await this.authService.create(user, password);
     return user;
   }
 
-  async validateUser(id: number): Promise<User> {
-    const user = await this.userRepository.findOne(id);
-    if (user !== undefined) {
-      return user;
+  async update(user: User, updateRequest: UpdateRequest): Promise<User> {
+    const { password, originalPassword } = updateRequest;
+    if (await this.authService.validate(user.email, originalPassword)) {
+      await this.authService.update(user, password);
     } else {
       throw new BadRequestException();
     }
-  }
-
-  async update(
-    user: User,
-    UpdateUserDto: UpdateUserDto,
-  ): Promise<UserWithoutAuth> {
-    const { password, originalPassword, ...userDto } = UpdateUserDto;
-    if (await this.authService.validateUser(user.email, originalPassword)) {
-      // update auth
-      await this.authService.update({
-        user,
-        password,
-      });
-      // update user
-      delete user.auth;
-      delete userDto.email; // cannot update email
-      await this.userRepository.update(user.id, userDto);
-    } else {
-      throw new BadRequestException();
-    }
-    return await this.userRepository.findOne(user.id);
-  }
-
-  async read(user: User): Promise<UserWithoutAuth> {
-    return await this.userRepository.findOne(user.id);
+    await user.reload();
+    return user;
   }
 
   async delete(user: User) {
-    await this.userRepository.delete(user.id);
+    await user.remove();
+  }
+
+  async isNewUser(email: string): Promise<boolean> {
+    return (await this.readByEmail(email)) === undefined;
+  }
+
+  async readByEmail(email: string): Promise<User> {
+    return User.findOneOrFail({
+      relations: ['auth'],
+      where: {
+        email: email,
+      },
+    });
   }
 }

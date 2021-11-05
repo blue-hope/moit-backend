@@ -27,24 +27,25 @@ export class RestaurantController {
   constructor() {}
 
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'create', description: 'Restaurant Create' })
   @ApiBody({ type: Restaurant })
   @ApiOkResponse()
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
+  @HttpCode(HttpStatus.OK)
   @Post()
   async create(@Request() req): Promise<Restaurant | void> {}
 
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'read', description: 'Restaurant Read' })
+  @ApiOperation({ summary: 'readAll', description: 'Restaurant Read' })
   @ApiBody({ type: [Restaurant] })
   @ApiOkResponse()
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
+  @HttpCode(HttpStatus.OK)
   @Get()
   async readAll(
-    @Body() CreateRestaurantDto: CreateRestaurantDto,
+    @Body() createRestaurantDto: CreateRestaurantDto,
+    @Query('categoryId') categoryId: number,
   ): Promise<Restaurant[] | void> {}
 }

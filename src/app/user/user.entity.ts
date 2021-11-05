@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
+  BaseEntity,
 } from 'typeorm';
 import { IsDate, IsEmail, IsPhoneNumber, IsString } from 'class-validator';
 import { Auth } from '@app/auth/auth.entity';
@@ -15,36 +16,32 @@ import { CastedColumn } from '@config/test/test.sqlite';
 import { Region } from '@app/region/region.entity';
 import { Order } from '@app/order/order.entity';
 import { Participant } from '@app/participant/participant.entity';
+import { University } from '@app/university/university.entity';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
   @ApiProperty({ type: () => Auth })
-  @OneToOne(() => Auth, (auth) => auth.user, {
-    cascade: true,
-  })
+  @OneToOne(() => Auth, (auth) => auth.user)
   auth: Auth;
 
   @ApiProperty({ type: () => Region })
-  @ManyToOne(() => Region, (region) => region.restaurants, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
+  @ManyToOne(() => Region, (region) => region.users)
   region: Region;
 
+  @ApiProperty({ type: () => University })
+  @ManyToOne(() => University, (university) => university.users)
+  university: University;
+
   @ApiProperty({ type: () => [Order] })
-  @OneToMany(() => Order, (order) => order.restaurant, {
-    cascade: true,
-  })
+  @OneToMany(() => Order, (order) => order.creator)
   orders: Order[];
 
   @ApiProperty({ type: () => [Participant] })
-  @OneToMany(() => Participant, (participant) => participant.user, {
-    cascade: true,
-  })
+  @OneToMany(() => Participant, (participant) => participant.user)
   participants: Participant[];
 
   @ApiProperty()
@@ -80,5 +77,3 @@ export class User {
   })
   updatedAt: Date;
 }
-
-export class UserWithoutAuth extends OmitType(User, ['auth'] as const) {}

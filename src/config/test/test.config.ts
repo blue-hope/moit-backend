@@ -1,14 +1,9 @@
 import { Auth } from '@app/auth/auth.entity';
-import { Board } from '@app/board/board.entity';
-import { Group } from '@app/group/group.entity';
-import { Plan } from '@app/plan/plan.entity';
-import { UserGroup } from '@app/usergroup/usergroup.entity';
 import { User } from '@app/user/user.entity';
 import { DynamicModule } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
 import AdminUser from 'nestjs-admin/dist/src/adminUser/adminUser.entity';
-import { Memo } from '@app/memo/memo.entity';
 
 type Entity = EntityClassOrSchema;
 
@@ -24,7 +19,7 @@ export const createTestConfiguration = (
 });
 
 function getDefaultEntities() {
-  return [User, Group, UserGroup, Auth, AdminUser, Board, Plan, Memo];
+  return [User, Auth, AdminUser];
 }
 
 export const TestConnectionModule: (

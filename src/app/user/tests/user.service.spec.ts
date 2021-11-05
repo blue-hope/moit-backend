@@ -54,13 +54,13 @@ describe('UserService', () => {
     }
   });
 
-  it('findOneByEmail - Success', async () => {
-    const result = await service.findOneByEmail(email);
+  it('readByEmail - Success', async () => {
+    const result = await service.readByEmail(email);
     expect(result).toBeInstanceOf(User);
   });
 
-  it('findOneByEmail - Fail', async () => {
-    const result = await service.findOneByEmail('other@email.com');
+  it('readByEmail - Fail', async () => {
+    const result = await service.readByEmail('other@email.com');
     expect(result).toBe(undefined);
   });
 
@@ -75,26 +75,8 @@ describe('UserService', () => {
     expect(result).toBe(false);
   });
 
-  it('read - Success', async () => {
-    const user = await service.findOneByEmail(email);
-    const result = await service.read(user);
-    expect(result).toBeInstanceOf(User);
-    expect(result).toMatchObject({
-      id: 1,
-      email: email,
-      name: 'name',
-    });
-  });
-
-  it('read - Fail', async () => {
-    const user = await service.findOneByEmail(email);
-    user.id = 0;
-    const result = await service.read(user);
-    expect(result).toBe(undefined);
-  });
-
   it('update - Success', async () => {
-    const user = await service.findOneByEmail(email);
+    const user = await service.readByEmail(email);
     const UpdateUserDto = {
       originalPassword: 'password',
       password: 'newPassword',
@@ -102,7 +84,7 @@ describe('UserService', () => {
     };
     const updateResult = await service.update(user, UpdateUserDto);
     expect(updateResult.name).toBe(UpdateUserDto.name);
-    const updatedUser = await authService.validateUser(
+    const updatedUser = await authService.validate(
       email,
       UpdateUserDto.password,
     );
@@ -110,7 +92,7 @@ describe('UserService', () => {
   });
 
   it('delete - Fail', async () => {
-    const user = await service.findOneByEmail(email);
+    const user = await service.readByEmail(email);
     user.id = 0;
     try {
       await service.delete(user);
@@ -120,10 +102,10 @@ describe('UserService', () => {
   });
 
   it('delete - Success', async () => {
-    const user = await service.findOneByEmail(email);
+    const user = await service.readByEmail(email);
     const result = await service.delete(user);
     expect(result).toBeInstanceOf(User);
-    const deletedUser = await service.findOneByEmail(email);
+    const deletedUser = await service.readByEmail(email);
     expect(deletedUser).toBe(undefined);
   });
 });

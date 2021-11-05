@@ -8,10 +8,10 @@ import {
 } from '@nestjs/swagger';
 import { AuthService } from '@app/auth/auth.service';
 import { LocalAuthGuard } from '@app/auth/guards/local-auth.guard';
-import { UserWithoutAuth } from '@app/user/user.entity';
-import { Loginresponse } from '@type/auth/auth.resp';
+import { LoginResponse } from '@type/auth/auth.resp';
 import { ApiController } from '@util/api_controller';
 import { RequestContext } from '@type/common/common.dto';
+import { LoginRequest } from '@type/auth/auth.req';
 
 @ApiTags('auth')
 @ApiController('auth')
@@ -19,13 +19,15 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'login', description: 'User Login' })
-  @ApiBody({ type: UserWithoutAuth })
+  @ApiBody({ type: LoginRequest })
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
+  @HttpCode(HttpStatus.OK)
   @Post('login')
-  async login(@Request() req: RequestContext): Promise<Loginresponse> {
-    return this.authService.login(req.user);
+  login(@Request() req: RequestContext): LoginResponse {
+    return {
+      accessToken: this.authService.login(req.user),
+    };
   }
 }

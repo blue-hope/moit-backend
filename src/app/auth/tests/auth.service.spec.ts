@@ -8,7 +8,7 @@ import { Auth } from '@app/auth/auth.entity';
 import { UserModule } from '@app/user/user.module';
 import { User } from '@app/user/user.entity';
 import { UserService } from '@app/user/user.service';
-import { jwtConstant } from '@constant/jwt.constant';
+import { JwtConstant } from '@constant/jwt';
 import { TestConnectionModule } from '@config/test/test.config';
 
 describe('AuthService', () => {
@@ -25,7 +25,7 @@ describe('AuthService', () => {
         UserModule,
         PassportModule,
         JwtModule.register({
-          secret: jwtConstant.secret,
+          secret: JwtConstant.secret,
           signOptions: { expiresIn: '60s' },
         }),
         ...(await TestConnectionModule('all')),
@@ -44,26 +44,26 @@ describe('AuthService', () => {
       password: password,
       phoneNumber: '010-1234-5678',
     });
-    user = await userService.findOneByEmail(email);
+    user = await userService.readByEmail(email);
   });
 
   it('bcryptCompareUser - Success', async () => {
-    const result = await service.bcryptCompareUser('password', user);
+    const result = await service.comparePassword(user, 'password');
     expect(result).toBe(true);
   });
 
   it('bcryptCompareUser - Fail', async () => {
-    const result = await service.bcryptCompareUser('wrong_password', user);
+    const result = await service.comparePassword(user, 'wrong_password');
     expect(result).toBe(false);
   });
 
-  it('validateUser - Success', async () => {
-    const result = await service.validateUser(user.email, password);
+  it('validate - Success', async () => {
+    const result = await service.validate(user.email, password);
     expect(result).toBeInstanceOf(User);
   });
 
-  it('validateUser - Fail', async () => {
-    const result = await service.validateUser('no@email.com', password);
+  it('validate - Fail', async () => {
+    const result = await service.validate('no@email.com', password);
     expect(result).toBeNull();
   });
 
@@ -77,10 +77,7 @@ describe('AuthService', () => {
   });
 
   it('create - Success (constraint failure avoidance)', async () => {
-    const result = await service.create({
-      user: user,
-      password: 'password',
-    });
+    const result = await service.create(user, password);
     expect(result).toBeInstanceOf(Auth);
   });
 });

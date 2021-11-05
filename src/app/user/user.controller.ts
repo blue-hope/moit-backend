@@ -8,6 +8,9 @@ import {
   BadRequestException,
   Request,
   Delete,
+  HttpCode,
+  HttpStatus,
+  Param,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -16,14 +19,21 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiUnauthorizedResponse,
+  ApiHeader,
 } from '@nestjs/swagger';
 import { QueryFailedError } from 'typeorm';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { UserService } from '@app/user/user.service';
-import { CreateUserDto, UpdateUserDto } from '@type/user/user.dto';
+import { CreateRequest, UpdateRequest } from '@type/user/user.req';
 import { ApiController } from '@util/api_controller';
-import { UserWithoutAuth } from './user.entity';
 import { RequestContext } from '@type/common/common.dto';
+import {
+  CreateResponse,
+  ReadResponse,
+  IsNewUserResponse,
+  UpdateResponse,
+} from '@type/user/user.resp';
+import { AuthHeader } from '@util/auth_header';
 
 @ApiTags('user')
 @ApiController('user')
@@ -32,13 +42,14 @@ export class UserController {
 
   @ApiOperation({ summary: 'create', description: 'User Create' })
   @ApiCreatedResponse({
-    type: UserWithoutAuth,
+    type: CreateResponse,
   })
   @ApiBadRequestResponse()
+  @HttpCode(HttpStatus.CREATED)
   @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<UserWithoutAuth> {
+  async create(@Body() createRequest: CreateRequest): Promise<CreateResponse> {
     try {
-      return await this.userService.create(createUserDto);
+      return await this.userService.create(createRequest);
     } catch (e) {
       if (e instanceof QueryFailedError) {
         throw new BadRequestException();
@@ -48,16 +59,23 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'read', description: 'User Read' })
+  @ApiOperation({ summary: 'read', description: 'User Read (Me)' })
+  @ApiHeader(AuthHeader)
   @ApiOkResponse({
-    type: UserWithoutAuth,
+    type: ReadResponse,
   })
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
-  @Get()
-  async read(@Request() req: RequestContext): Promise<UserWithoutAuth> {
+  @HttpCode(HttpStatus.OK)
+  @Get('me')
+  async read(@Request() req: RequestContext): Promise<ReadResponse> {
     try {
-      return await this.userService.read(req.user);
+      const user = req.user;
+      return {
+        ...user,
+        region_id: user.region.id,
+        university_id: user.university.id,
+      };
     } catch (e) {
       if (e instanceof QueryFailedError) {
         throw new BadRequestException();
@@ -68,28 +86,32 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'update', description: 'User Update' })
+  @ApiHeader(AuthHeader)
   @ApiOkResponse({
-    type: UserWithoutAuth,
+    type: UpdateResponse,
   })
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
+  @HttpCode(HttpStatus.OK)
   @Patch()
   async update(
     @Request() req: RequestContext,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Promise<UserWithoutAuth> {
-    return await this.userService.update(req.user, updateUserDto);
+    @Body() updateRequest: UpdateRequest,
+  ): Promise<UpdateResponse> {
+    return await this.userService.update(req.user, updateRequest);
   }
 
-  @ApiOperation({ summary: 'isNewUser', description: 'User Unique Check' })
-  @ApiOkResponse({
-    type: UserWithoutAuth,
-  })
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'delete', description: 'User Delete' })
+  @ApiHeader(AuthHeader)
+  @ApiOkResponse()
   @ApiBadRequestResponse()
-  @Get('is-new-user')
-  async isNewUser(@Query() query: { email: string }): Promise<boolean> {
+  @ApiUnauthorizedResponse()
+  @HttpCode(HttpStatus.OK)
+  @Delete()
+  async delete(@Request() req: RequestContext) {
     try {
-      return await this.userService.isNewUser(query.email);
+      return await this.userService.delete(req.user);
     } catch (e) {
       if (e instanceof QueryFailedError) {
         throw new BadRequestException();
@@ -98,15 +120,18 @@ export class UserController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'delete', description: 'User Delete' })
-  @ApiOkResponse()
+  @ApiOperation({ summary: 'isNewUser', description: 'User Unique Check' })
+  @ApiOkResponse({
+    type: IsNewUserResponse,
+  })
   @ApiBadRequestResponse()
-  @ApiUnauthorizedResponse()
-  @Delete()
-  async delete(@Request() req: RequestContext) {
+  @HttpCode(HttpStatus.OK)
+  @Get('is-new-user')
+  async isNewUser(@Query('email') email: string): Promise<IsNewUserResponse> {
     try {
-      return await this.userService.delete(req.user);
+      return {
+        isNewUser: await this.userService.isNewUser(email),
+      };
     } catch (e) {
       if (e instanceof QueryFailedError) {
         throw new BadRequestException();

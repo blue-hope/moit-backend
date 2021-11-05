@@ -9,7 +9,7 @@ import { LocalStrategy } from '@app/auth/strategies/local.strategy';
 import { UserModule } from '@app/user/user.module';
 import { UserService } from '@app/user/user.service';
 import { TestConnectionModule } from '@config/test/test.config';
-import { jwtConstant } from '@constant/jwt.constant';
+import { JwtConstant } from '@constant/jwt';
 
 describe('AuthController', () => {
   let app: INestApplication;
@@ -25,7 +25,7 @@ describe('AuthController', () => {
         UserModule,
         PassportModule,
         JwtModule.register({
-          secret: jwtConstant.secret,
+          secret: JwtConstant.secret,
           signOptions: { expiresIn: '60s' },
         }),
         ...(await TestConnectionModule('all')),
@@ -44,7 +44,7 @@ describe('AuthController', () => {
       password: password,
       phoneNumber: '010-1234-5678',
     });
-    await userService.findOneByEmail(email);
+    await userService.readByEmail(email);
 
     app = moduleFixture.createNestApplication();
     await app.init();

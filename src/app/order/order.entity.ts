@@ -33,12 +33,10 @@ export class Order {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  writer: User;
+  creator: User;
 
   @ApiProperty({ type: () => [Participant] })
-  @OneToMany(() => Participant, (participant) => participant.user, {
-    cascade: true,
-  })
+  @OneToMany(() => Participant, (participant) => participant.user)
   participants: Participant[];
 
   @ApiProperty({ type: () => Fee })

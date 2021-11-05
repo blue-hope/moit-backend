@@ -3,14 +3,14 @@ import {
   Column,
   PrimaryGeneratedColumn,
   OneToOne,
-  JoinColumn,
+  BaseEntity,
 } from 'typeorm';
 import { User } from '@app/user/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
 @Entity()
-export class Auth {
+export class Auth extends BaseEntity {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
@@ -18,9 +18,6 @@ export class Auth {
   @ApiProperty({ type: () => User })
   @OneToOne(() => User, (user) => user.auth, {
     onDelete: 'CASCADE',
-  })
-  @JoinColumn({
-    name: 'user_id',
   })
   user: User;
 

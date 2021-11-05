@@ -1,7 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
-import { Restaurant } from '@app/restaurant/restaurant.entity';
+import { IsNumber, IsString } from 'class-validator';
 import { User } from '@app/user/user.entity';
 import { University } from '@app/university/university.entity';
 
@@ -11,23 +10,18 @@ export class Region {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty({ type: () => [Restaurant] })
-  @OneToMany(() => Restaurant, (restaurant) => restaurant.region, {
-    cascade: true,
-  })
-  restaurants: Restaurant[];
-
   @ApiProperty({ type: () => [User] })
-  @OneToMany(() => User, (user) => user.region, {
-    cascade: true,
-  })
+  @OneToMany(() => User, (user) => user.region)
   users: User[];
 
   @ApiProperty({ type: () => [University] })
-  @OneToMany(() => University, (university) => university.region, {
-    cascade: true,
-  })
+  @OneToMany(() => University, (university) => university.region)
   universities: University[];
+
+  @ApiProperty()
+  @IsString()
+  @Column()
+  name: string;
 
   @ApiProperty()
   @IsNumber()

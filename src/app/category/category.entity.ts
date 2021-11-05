@@ -10,9 +10,7 @@ export class Category {
   id: number;
 
   @ApiProperty({ type: () => [Restaurant] })
-  @OneToMany(() => Restaurant, (restaurant) => restaurant.category, {
-    cascade: true,
-  })
+  @OneToMany(() => Restaurant, (restaurant) => restaurant.category)
   restaurants: Restaurant[];
 
   @ApiProperty()

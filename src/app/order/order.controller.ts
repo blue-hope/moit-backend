@@ -23,11 +23,11 @@ export class OrderController {
   constructor() {}
 
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'read', description: 'Order Read' })
   @ApiBody({ type: [Order] })
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
+  @HttpCode(HttpStatus.OK)
   @Get()
   async readAll(@Request() req): Promise<Order[] | void> {}
 }

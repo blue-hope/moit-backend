@@ -16,11 +16,11 @@ export class CategoryController {
   constructor() {}
 
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'read', description: 'Category Read' })
   @ApiBody({ type: [Category] })
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
+  @HttpCode(HttpStatus.OK)
   @Get()
   async readAll(@Request() req): Promise<Category[] | void> {}
 }

@@ -15,6 +15,7 @@ import { Region } from '@app/region/region.entity';
 import { Menu } from '@app/menu/menu.entity';
 import { Fee } from '@app/fee/fee.entity';
 import { Order } from '@app/order/order.entity';
+import { Zone } from '@app/zone/zone.entity';
 
 @Entity()
 export class Restaurant {
@@ -29,29 +30,20 @@ export class Restaurant {
   })
   category: Category;
 
-  @ApiProperty({ type: () => Region })
-  @ManyToOne(() => Region, (region) => region.restaurants, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
-  region: Region;
+  @ApiProperty({ type: () => [Zone] })
+  @OneToMany(() => Zone, (zone) => zone.restaurant)
+  zones: Zone[];
 
   @ApiProperty({ type: () => [Menu] })
-  @OneToMany(() => Menu, (menu) => menu.restaurant, {
-    cascade: true,
-  })
+  @OneToMany(() => Menu, (menu) => menu.restaurant)
   menus: Menu[];
 
   @ApiProperty({ type: () => [Fee] })
-  @OneToMany(() => Fee, (fee) => fee.restaurant, {
-    cascade: true,
-  })
+  @OneToMany(() => Fee, (fee) => fee.restaurant)
   fees: Fee[];
 
   @ApiProperty({ type: () => [Order] })
-  @OneToMany(() => Order, (order) => order.restaurant, {
-    cascade: true,
-  })
+  @OneToMany(() => Order, (order) => order.restaurant)
   orders: Order[];
 
   @ApiProperty()

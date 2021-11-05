@@ -9,14 +9,14 @@ import { LocalStrategy } from '@app/auth/strategies/local.strategy';
 import { UserModule } from '@app/user/user.module';
 import { Auth } from '@app/auth/auth.entity';
 import { JwtStrategy } from '@app/auth/strategies/jwt.strategy';
-import { jwtConstant } from '@constant/jwt.constant';
+import { JwtConstant } from '@constant/jwt';
 
 @Module({
   imports: [
     forwardRef(() => UserModule),
     PassportModule,
     JwtModule.register({
-      secret: jwtConstant.secret,
+      secret: JwtConstant.secret,
       signOptions: { expiresIn: '60m' },
     }),
     TypeOrmModule.forFeature([User, Auth]),
