@@ -17,9 +17,7 @@ export class UserCreateRequest {
 
   @ApiProperty()
   @IsString()
-  @Matches(
-    /^(?=.*[a-zA-z]{1,})(?=.*\d{1,})(?=.*[~`!@#$%\^&*()-+=]{1,}).{8,20}$/,
-  )
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
   password: string;
 
   @ApiProperty()
@@ -30,15 +28,11 @@ export class UserCreateRequest {
 export class UserUpdateRequest {
   @ApiProperty()
   @IsString()
-  @Matches(
-    /^(?=.*[a-zA-z]{1,})(?=.*\d{1,})(?=.*[~`!@#$%\^&*()-+=]{1,}).{8,20}$/,
-  )
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
   password?: string;
 
   @ApiProperty()
   @IsString()
-  @Matches(
-    /^(?=.*[a-zA-z]{1,})(?=.*\d{1,})(?=.*[~`!@#$%\^&*()-+=]{1,}).{8,20}$/,
-  )
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
   originalPassword: string;
 }
