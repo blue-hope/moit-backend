@@ -62,4 +62,12 @@ export class OrderService {
     };
     return asyncFilter(orders, filter); // TODO: use sql (not support lazy find?)
   }
+
+  async join(user: User, orderId: number): Promise<Order> {
+    await Participant.create({
+      order: Order.findOne(orderId),
+      user: Promise.resolve(user),
+    }).save();
+    return await Order.findOne(orderId);
+  }
 }

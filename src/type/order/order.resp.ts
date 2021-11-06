@@ -58,6 +58,19 @@ export class OrderReadResponse {
   updatedAt: Date;
 }
 
+export class OrderReadForRestaurantResponse extends OrderReadResponse {
+  @ApiProperty()
+  @IsString()
+  creatorPhoneNumber?: string;
+
+  @ApiProperty()
+  participantsName: string[];
+
+  @ApiProperty()
+  @IsString()
+  deliveryLocation: string;
+}
+
 export class OrderJoinResponse {
   @ApiProperty({ type: () => OrderReadResponse })
   order: OrderReadResponse;

@@ -27,7 +27,10 @@ import {
 import { RestaurantService } from './restaurant.service';
 import { serializeAll } from '@util/serialize';
 import { restaurantConverter } from '@type/restaurant/restaurant.converter';
-import { orderConverter } from '@type/order/order.converter';
+import {
+  orderConverter,
+  orderConverterForRestaurant,
+} from '@type/order/order.converter';
 import { OrderStep } from '@type/order/order.enum';
 
 @ApiTags('restaurant')
@@ -74,7 +77,9 @@ export class RestaurantController {
     const orders = await restaurant.orders;
     return {
       orders: serializeAll(
-        await Promise.all(orders.map((order) => orderConverter(order))),
+        await Promise.all(
+          orders.map((order) => orderConverterForRestaurant(order)),
+        ),
       ),
       totalOrderCount: orders.length,
       readyOrderCount: orders.filter((order) => order.step == OrderStep.READY)

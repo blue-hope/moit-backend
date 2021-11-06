@@ -1,10 +1,7 @@
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { UserService } from '@app/user/user.service';
-import { UserController } from '@app/user/user.controller';
-import { AuthModule } from '@app/auth/auth.module';
-import { TestConnectionModule } from '@config/test/test.config';
+
 import {
   BadRequestInterceptor,
   NotFoundInterceptor,

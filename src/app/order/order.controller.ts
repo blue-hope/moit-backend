@@ -113,7 +113,11 @@ export class OrderController {
   @HttpCode(HttpStatus.OK)
   @Post(':id/join')
   async join(
+    @Request() req: RequestContext,
     @Param('id') id: number,
-    @Body() OrderJoinRequest,
-  ): Promise<OrderReadResponse | void> {}
+  ): Promise<OrderReadResponse> {
+    return serialize(
+      orderConverter(await this.orderService.join(req.user, id)),
+    );
+  }
 }
