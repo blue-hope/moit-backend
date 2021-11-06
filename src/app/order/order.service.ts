@@ -78,15 +78,10 @@ export class OrderService {
 
   async join(user: User, orderId: number): Promise<Order> {
     const order = await Order.findOne(orderId);
-    try {
-      console.log('!', await (await order.participants)[0].user, user.id);
-    } catch (e) {
-      console.log('!', await order.participants, user.id);
-    }
-    const dto = new Participant();
-    dto.user = Promise.resolve(user);
-    dto.order = Promise.resolve(order);
-    await dto.save();
+    await Participant.create({
+      user: Promise.resolve(user),
+      order: Promise.resolve(order),
+    }).save();
     console.log('!!', await order.participants);
     return order;
   }

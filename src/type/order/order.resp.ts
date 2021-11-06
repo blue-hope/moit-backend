@@ -39,6 +39,10 @@ export class OrderReadResponse {
 
   @ApiProperty()
   @IsString()
+  step: string;
+
+  @ApiProperty()
+  @IsString()
   message: string;
 
   @ApiProperty()
