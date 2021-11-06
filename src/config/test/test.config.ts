@@ -1,9 +1,12 @@
 import { Auth } from '@app/auth/auth.entity';
 import { Category } from '@app/category/category.entity';
 import { Fee } from '@app/fee/fee.entity';
+import { Manner } from '@app/manner/manner.entity';
 import { Menu } from '@app/menu/menu.entity';
 import { Order } from '@app/order/order.entity';
+import { OrderMenu } from '@app/orderMenu/order_menu.entity';
 import { Participant } from '@app/participant/participant.entity';
+import { Purchasement } from '@app/purchasement/purchasement.entity';
 import { Region } from '@app/region/region.entity';
 import { Restaurant } from '@app/restaurant/restaurant.entity';
 import { University } from '@app/university/university.entity';
@@ -41,6 +44,9 @@ function getDefaultEntities() {
     Fee,
     Order,
     Participant,
+    Purchasement,
+    OrderMenu,
+    Manner,
   ];
 }
 

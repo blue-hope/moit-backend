@@ -41,6 +41,10 @@ export class UserReadResponse {
   point: number;
 
   @ApiProperty()
+  @IsNumber()
+  manner: number;
+
+  @ApiProperty()
   @IsDate()
   createdAt: Date;
 

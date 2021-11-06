@@ -5,12 +5,10 @@ import {
   Patch,
   Query,
   UseGuards,
-  BadRequestException,
   Request,
   Delete,
   HttpCode,
   HttpStatus,
-  Param,
   NotFoundException,
 } from '@nestjs/common';
 import {
@@ -65,8 +63,14 @@ export class UserController {
   @Get('me')
   async read(@Request() req: RequestContext): Promise<UserReadResponse> {
     const user = req.user;
+    const manners = await (await user.manners).map((manner) => manner.score);
     return {
       ...user,
+      manner:
+        manners.reduce(
+          (prevScore, currentScore) => prevScore + currentScore,
+          0,
+        ) / manners.length,
       regionId: (await user.region)?.id,
       universityId: (await user.university)?.id,
     };

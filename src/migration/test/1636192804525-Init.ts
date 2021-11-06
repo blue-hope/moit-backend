@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class AddPurchasement1636187351544 implements MigrationInterface {
-    name = 'AddPurchasement1636187351544'
+export class Init1636192804525 implements MigrationInterface {
+    name = 'Init1636192804525'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "category" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL)`);
@@ -15,7 +15,8 @@ export class AddPurchasement1636187351544 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "zone" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "university_id" integer, "restaurant_id" integer)`);
         await queryRunner.query(`CREATE TABLE "university" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "region_id" integer)`);
         await queryRunner.query(`CREATE TABLE "region" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "latitude" integer NOT NULL, "longitude" integer NOT NULL)`);
-        await queryRunner.query(`CREATE TABLE "user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "name" varchar NOT NULL, "phone_number" varchar NOT NULL, "point" varchar NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "region_id" integer, "university_id" integer, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "UQ_01eea41349b6c9275aec646eee0" UNIQUE ("phone_number"))`);
+        await queryRunner.query(`CREATE TABLE "manner" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer)`);
+        await queryRunner.query(`CREATE TABLE "user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "name" varchar NOT NULL, "phone_number" varchar NOT NULL, "point" integer NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "region_id" integer, "university_id" integer, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "UQ_01eea41349b6c9275aec646eee0" UNIQUE ("phone_number"))`);
         await queryRunner.query(`CREATE TABLE "auth" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "password" varchar NOT NULL, "salt" varchar NOT NULL, "user_id" integer, CONSTRAINT "REL_9922406dc7d70e20423aeffadf" UNIQUE ("user_id"))`);
         await queryRunner.query(`CREATE TABLE "temporary_fee" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "price_start" integer NOT NULL, "price_end" integer NOT NULL, "delivery_fee" integer NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "restaurant_id" integer, CONSTRAINT "FK_1415ccec8a50551ed3baad43d72" FOREIGN KEY ("restaurant_id") REFERENCES "restaurant" ("id") ON DELETE CASCADE ON UPDATE CASCADE)`);
         await queryRunner.query(`INSERT INTO "temporary_fee"("id", "price_start", "price_end", "delivery_fee", "created_at", "updated_at", "restaurant_id") SELECT "id", "price_start", "price_end", "delivery_fee", "created_at", "updated_at", "restaurant_id" FROM "fee"`);
@@ -53,7 +54,11 @@ export class AddPurchasement1636187351544 implements MigrationInterface {
         await queryRunner.query(`INSERT INTO "temporary_university"("id", "name", "region_id") SELECT "id", "name", "region_id" FROM "university"`);
         await queryRunner.query(`DROP TABLE "university"`);
         await queryRunner.query(`ALTER TABLE "temporary_university" RENAME TO "university"`);
-        await queryRunner.query(`CREATE TABLE "temporary_user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "name" varchar NOT NULL, "phone_number" varchar NOT NULL, "point" varchar NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "region_id" integer, "university_id" integer, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "UQ_01eea41349b6c9275aec646eee0" UNIQUE ("phone_number"), CONSTRAINT "FK_68c168fe38b5826502b831f9f83" FOREIGN KEY ("region_id") REFERENCES "region" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION, CONSTRAINT "FK_1518391a178a27840edf478c7b9" FOREIGN KEY ("university_id") REFERENCES "university" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION)`);
+        await queryRunner.query(`CREATE TABLE "temporary_manner" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, CONSTRAINT "FK_298c85d87247dd15bead6f7c7b2" FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE)`);
+        await queryRunner.query(`INSERT INTO "temporary_manner"("id", "user_id") SELECT "id", "user_id" FROM "manner"`);
+        await queryRunner.query(`DROP TABLE "manner"`);
+        await queryRunner.query(`ALTER TABLE "temporary_manner" RENAME TO "manner"`);
+        await queryRunner.query(`CREATE TABLE "temporary_user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "name" varchar NOT NULL, "phone_number" varchar NOT NULL, "point" integer NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "region_id" integer, "university_id" integer, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "UQ_01eea41349b6c9275aec646eee0" UNIQUE ("phone_number"), CONSTRAINT "FK_68c168fe38b5826502b831f9f83" FOREIGN KEY ("region_id") REFERENCES "region" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION, CONSTRAINT "FK_1518391a178a27840edf478c7b9" FOREIGN KEY ("university_id") REFERENCES "university" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION)`);
         await queryRunner.query(`INSERT INTO "temporary_user"("id", "email", "name", "phone_number", "point", "created_at", "updated_at", "region_id", "university_id") SELECT "id", "email", "name", "phone_number", "point", "created_at", "updated_at", "region_id", "university_id" FROM "user"`);
         await queryRunner.query(`DROP TABLE "user"`);
         await queryRunner.query(`ALTER TABLE "temporary_user" RENAME TO "user"`);
@@ -69,9 +74,13 @@ export class AddPurchasement1636187351544 implements MigrationInterface {
         await queryRunner.query(`INSERT INTO "auth"("id", "password", "salt", "user_id") SELECT "id", "password", "salt", "user_id" FROM "temporary_auth"`);
         await queryRunner.query(`DROP TABLE "temporary_auth"`);
         await queryRunner.query(`ALTER TABLE "user" RENAME TO "temporary_user"`);
-        await queryRunner.query(`CREATE TABLE "user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "name" varchar NOT NULL, "phone_number" varchar NOT NULL, "point" varchar NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "region_id" integer, "university_id" integer, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "UQ_01eea41349b6c9275aec646eee0" UNIQUE ("phone_number"))`);
+        await queryRunner.query(`CREATE TABLE "user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "name" varchar NOT NULL, "phone_number" varchar NOT NULL, "point" integer NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "region_id" integer, "university_id" integer, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "UQ_01eea41349b6c9275aec646eee0" UNIQUE ("phone_number"))`);
         await queryRunner.query(`INSERT INTO "user"("id", "email", "name", "phone_number", "point", "created_at", "updated_at", "region_id", "university_id") SELECT "id", "email", "name", "phone_number", "point", "created_at", "updated_at", "region_id", "university_id" FROM "temporary_user"`);
         await queryRunner.query(`DROP TABLE "temporary_user"`);
+        await queryRunner.query(`ALTER TABLE "manner" RENAME TO "temporary_manner"`);
+        await queryRunner.query(`CREATE TABLE "manner" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer)`);
+        await queryRunner.query(`INSERT INTO "manner"("id", "user_id") SELECT "id", "user_id" FROM "temporary_manner"`);
+        await queryRunner.query(`DROP TABLE "temporary_manner"`);
         await queryRunner.query(`ALTER TABLE "university" RENAME TO "temporary_university"`);
         await queryRunner.query(`CREATE TABLE "university" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "region_id" integer)`);
         await queryRunner.query(`INSERT INTO "university"("id", "name", "region_id") SELECT "id", "name", "region_id" FROM "temporary_university"`);
@@ -110,6 +119,7 @@ export class AddPurchasement1636187351544 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE "temporary_fee"`);
         await queryRunner.query(`DROP TABLE "auth"`);
         await queryRunner.query(`DROP TABLE "user"`);
+        await queryRunner.query(`DROP TABLE "manner"`);
         await queryRunner.query(`DROP TABLE "region"`);
         await queryRunner.query(`DROP TABLE "university"`);
         await queryRunner.query(`DROP TABLE "zone"`);

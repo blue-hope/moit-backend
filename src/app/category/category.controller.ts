@@ -11,11 +11,12 @@ import { ApiController } from '@util/api_controller';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { CategoryReadAllResponse } from '@type/category/category.resp';
 import { AuthHeader } from '@util/auth_header';
+import { CategoryService } from './category.service';
 
 @ApiTags('category')
 @ApiController('category')
 export class CategoryController {
-  constructor() {}
+  constructor(private readonly categoryService: CategoryService) {}
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'read', description: 'Category Read' })
@@ -25,5 +26,9 @@ export class CategoryController {
   @ApiUnauthorizedResponse()
   @HttpCode(HttpStatus.OK)
   @Get()
-  async readAll(@Request() req): Promise<CategoryReadAllResponse | void> {}
+  async readAll(): Promise<CategoryReadAllResponse> {
+    return {
+      categories: await this.categoryService.readAll(),
+    };
+  }
 }

@@ -24,6 +24,7 @@ import { Participant } from '@app/participant/participant.entity';
 import { University } from '@app/university/university.entity';
 import { BaseEntityImpl } from '@util/base_entity_impl';
 import { Purchasement } from '@app/purchasement/purchasement.entity';
+import { Manner } from '@app/manner/manner.entity';
 
 @Entity()
 export class User extends BaseEntityImpl {
@@ -55,6 +56,10 @@ export class User extends BaseEntityImpl {
   @OneToMany(() => Purchasement, (purchasement) => purchasement.user)
   purchasements: Promise<Purchasement[]>;
 
+  @ApiProperty({ type: () => [Manner] })
+  @OneToMany(() => Manner, (manner) => manner.user)
+  manners: Promise<Manner[]>;
+
   @ApiProperty()
   @IsEmail()
   @Column({ unique: true })
@@ -73,7 +78,7 @@ export class User extends BaseEntityImpl {
   @ApiProperty()
   @IsNumber()
   @Column()
-  point: number;
+  point: number = 0;
 
   @ApiProperty()
   @IsDate()

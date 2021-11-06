@@ -10,9 +10,10 @@ import { IsString } from 'class-validator';
 import { Region } from '@app/region/region.entity';
 import { Zone } from '@app/zone/zone.entity';
 import { User } from '@app/user/user.entity';
+import { BaseEntityImpl } from '@util/base_entity_impl';
 
 @Entity()
-export class University {
+export class University extends BaseEntityImpl {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
