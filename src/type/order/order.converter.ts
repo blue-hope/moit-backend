@@ -13,7 +13,11 @@ export async function orderConverter(order: Order): Promise<OrderReadResponse> {
   const orderMenus = await order.orderMenus;
   const fee = await order.fee;
   return {
-    ...order,
+    id: order.id,
+    message: order.message,
+    maxParticipants: order.maxParticipants,
+    createdAt: order.createdAt,
+    updatedAt: order.updatedAt,
     restaurantId: restaurant.id,
     restaurantName: restaurant.name,
     thumbnailImageKey: restaurant.imageKey,
@@ -52,7 +56,11 @@ export async function orderConverterForRestaurant(
   const orderMenus = await order.orderMenus;
   const fee = await order.fee;
   return {
-    ...order,
+    id: order.id,
+    message: order.message,
+    maxParticipants: order.maxParticipants,
+    createdAt: order.createdAt,
+    updatedAt: order.updatedAt,
     restaurantId: restaurant.id,
     restaurantName: restaurant.name,
     thumbnailImageKey: restaurant.imageKey,

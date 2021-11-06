@@ -36,12 +36,15 @@ export class OrderService {
       order: Promise.resolve(order),
       user: Promise.resolve(user),
     }).save();
-    menus.forEach(async (menu) => {
-      await OrderMenu.create({
-        order: Promise.resolve(order),
-        menu: Promise.resolve(menu),
-      }).save();
-    }); // is it really async?
+    await Promise.all(
+      menus.map(async (menu) => {
+        await OrderMenu.create({
+          order: Promise.resolve(order),
+          menu: Promise.resolve(menu),
+        }).save();
+      }),
+    );
+    await order.reload();
     return order;
   }
 
@@ -75,11 +78,15 @@ export class OrderService {
 
   async join(user: User, orderId: number): Promise<Order> {
     const order = await Order.findOne(orderId);
-    console.log('!', await order.participants, user.id);
-    await Participant.create({
-      order: Promise.resolve(order),
-      user: Promise.resolve(user),
-    }).save();
+    try {
+      console.log('!', await (await order.participants)[0].user, user.id);
+    } catch (e) {
+      console.log('!', await order.participants, user.id);
+    }
+    const dto = new Participant();
+    dto.user = Promise.resolve(user);
+    dto.order = Promise.resolve(order);
+    await dto.save();
     console.log('!!', await order.participants);
     return order;
   }
