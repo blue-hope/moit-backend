@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Query,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -29,6 +30,7 @@ import { OrderService } from './order.service';
 import { Order } from './order.entity';
 import { orderConverter } from '@type/order/order.converter';
 import { serialize, serializeAll } from '@util/serialize';
+import { RequestContext } from '@type/common/common.dto';
 
 @ApiTags('order')
 @ApiController('order')
@@ -45,8 +47,13 @@ export class OrderController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async create(
+    @Request() req: RequestContext,
     @Body() orderCreateRequest: OrderCreateRequest,
-  ): Promise<OrderCreateResponse | void> {}
+  ): Promise<OrderCreateResponse> {
+    return serialize(
+      await this.orderService.create(req.user, orderCreateRequest),
+    );
+  }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'readAll', description: 'Order ReadAll' })

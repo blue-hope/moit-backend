@@ -15,6 +15,7 @@ describe('OrderService', () => {
   let app: TestingModule;
   let service: OrderService;
 
+  let user: User;
   let order1: Order;
   let order2: Order;
 
@@ -23,7 +24,7 @@ describe('OrderService', () => {
       imports: [AppModule],
     }).compile();
     service = app.get<OrderService>(OrderService);
-    const user = await createUser(app);
+    user = await createUser(app);
     const restaurant = await createRestaurant();
     const fee = await Fee.create({
       priceStart: 10000,
@@ -82,9 +83,24 @@ describe('OrderService', () => {
     }).save();
   });
 
-  it('readAllByQuery - Success', async () => {
-    const result = await service.readAllByQuery(1, 'nal');
+  it('create - Success', async () => {
+    const result = await service.create(user, {
+      restaurantId: 1,
+      menus: [
+        {
+          menuId: 1,
+          count: 1,
+        },
+      ],
+      message: 'messssage',
+      maxParticipants: 5,
+    });
     console.log(result);
-    console.log(result.map((r) => serialize(r)));
   });
+
+  // it('readAllByQuery - Success', async () => {
+  //   const result = await service.readAllByQuery(1, 'nal');
+  //   console.log(result);
+  //   console.log(result.map((r) => serialize(r)));
+  // });
 });

@@ -69,7 +69,7 @@ export class Order extends BaseEntityImpl {
   @ApiProperty()
   @IsString()
   @Column()
-  step: OrderStep;
+  step: OrderStep = OrderStep.INVITING;
 
   @ApiProperty()
   @IsDate()

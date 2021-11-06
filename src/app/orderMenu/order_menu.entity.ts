@@ -34,7 +34,7 @@ export class OrderMenu extends BaseEntityImpl {
 
   @ApiProperty()
   @IsNumber()
-  count: number;
+  count: number = 1;
 
   @ApiProperty()
   @IsDate()
