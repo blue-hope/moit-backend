@@ -45,7 +45,7 @@ export class Order extends BaseEntityImpl {
   creator: Promise<User>;
 
   @ApiProperty({ type: () => [Participant] })
-  @OneToMany(() => Participant, (participant) => participant.user)
+  @OneToMany(() => Participant, (participant) => participant.order)
   participants: Promise<Participant[]>;
 
   @ApiProperty({ type: () => [OrderMenu] })

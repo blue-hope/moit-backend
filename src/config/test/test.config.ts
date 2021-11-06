@@ -27,7 +27,7 @@ export const createTestConfiguration = (
   entities,
   dropSchema: true,
   synchronize: true,
-  logging: true,
+  logging: false,
   namingStrategy: new SnakeNamingStrategy(),
 });
 
