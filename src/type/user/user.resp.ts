@@ -37,6 +37,10 @@ export class UserReadResponse {
   phoneNumber: string;
 
   @ApiProperty()
+  @IsNumber()
+  point: number;
+
+  @ApiProperty()
   @IsDate()
   createdAt: Date;
 
