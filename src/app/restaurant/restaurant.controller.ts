@@ -78,7 +78,9 @@ export class RestaurantController {
     @Param('id') restaurantId: number,
   ): Promise<RestaurantReadAllOrdersResponse> {
     const restaurant = await this.restaurantService.read(restaurantId);
-    const orders = await restaurant.orders;
+    const orders = (await restaurant.orders).filter(
+      (order) => order.step !== OrderStep.INVITING,
+    );
     return {
       orders: serializeAll(
         await Promise.all(

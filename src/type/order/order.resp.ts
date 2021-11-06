@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { MenuReadResponse } from '@type/menu/menu.resp';
 import { IsBoolean, IsDate, IsNumber, IsString } from 'class-validator';
 
 export class OrderCreateResponse {
@@ -32,6 +33,9 @@ export class OrderReadResponse {
   @ApiProperty()
   @IsNumber()
   creatorId: number;
+
+  @ApiProperty({ type: () => [MenuReadResponse] })
+  menus: MenuReadResponse[];
 
   @ApiProperty()
   @IsString()

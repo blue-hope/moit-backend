@@ -7,6 +7,7 @@ import { Menu } from '@app/menu/menu.entity';
 import { In } from 'typeorm';
 import { Participant } from '@app/participant/participant.entity';
 import { User } from '@app/user/user.entity';
+import { OrderMenu } from '@app/orderMenu/order_menu.entity';
 
 @Injectable()
 export class OrderService {
@@ -17,21 +18,30 @@ export class OrderService {
     orderCreateRequest: OrderCreateRequest,
   ): Promise<Order> {
     const { restaurantId, menus: reqMenus, ...orderDto } = orderCreateRequest;
-    const restaurant = Restaurant.findOne(restaurantId);
-    const menus = Menu.find({
+    const restaurant = await Restaurant.findOne(restaurantId);
+    const menus = await Menu.find({
       where: {
         id: In(reqMenus.map((menu) => menu.menuId)),
       },
     });
+
+    const fees = await restaurant.fees;
     const order = await Order.create({
-      restaurant,
-      menus,
+      restaurant: Promise.resolve(restaurant),
+      creator: Promise.resolve(user),
+      fee: Promise.resolve(fees[0]),
       ...orderDto,
     }).save();
     await Participant.create({
       order: Promise.resolve(order),
       user: Promise.resolve(user),
     }).save();
+    menus.forEach(async (menu) => {
+      await OrderMenu.create({
+        order: Promise.resolve(order),
+        menu: Promise.resolve(menu),
+      }).save();
+    }); // is it really async?
     return order;
   }
 
@@ -56,7 +66,7 @@ export class OrderService {
     const filter = async (order) => {
       return (
         (await order.restaurant).name.includes(searchKey) &&
-        (categoryId === undefined ||
+        (isNaN(categoryId) ||
           (await (await order.restaurant).category).id === categoryId)
       );
     };
@@ -64,10 +74,13 @@ export class OrderService {
   }
 
   async join(user: User, orderId: number): Promise<Order> {
+    const order = await Order.findOne(orderId);
+    console.log('!', await order.participants, user.id);
     await Participant.create({
-      order: Order.findOne(orderId),
+      order: Promise.resolve(order),
       user: Promise.resolve(user),
     }).save();
-    return await Order.findOne(orderId);
+    console.log('!!', await order.participants);
+    return order;
   }
 }

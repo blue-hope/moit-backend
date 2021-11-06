@@ -27,6 +27,17 @@ export async function orderConverter(order: Order): Promise<OrderReadResponse> {
           ),
         )
       ).reduce((prev, cur) => prev + cur, 0) + fee.deliveryFee,
+    menus: await Promise.all(
+      orderMenus.map(async (orderMenu) => {
+        const menu = await orderMenu.menu;
+        return {
+          name: menu.name,
+          id: menu.id,
+          price: menu.price,
+          imageKey: menu.imageKey,
+        };
+      }),
+    ),
   };
 }
 
@@ -60,5 +71,16 @@ export async function orderConverterForRestaurant(
           ),
         )
       ).reduce((prev, cur) => prev + cur, 0) + fee.deliveryFee,
+    menus: await Promise.all(
+      orderMenus.map(async (orderMenu) => {
+        const menu = await orderMenu.menu;
+        return {
+          name: menu.name,
+          id: menu.id,
+          price: menu.price,
+          imageKey: menu.imageKey,
+        };
+      }),
+    ),
   };
 }

@@ -50,10 +50,14 @@ export class UserController {
   async create(
     @Body() createRequest: UserCreateRequest,
   ): Promise<UserCreateResponse> {
-    return await this.userService.create({
+    const user = await this.userService.create({
       ...createRequest,
       provider: SocialProvider.LOCAL,
     });
+    return {
+      id: user.id,
+      email: user.email,
+    };
   }
 
   @UseGuards(JwtAuthGuard)

@@ -24,13 +24,14 @@ import { ApiController } from '@util/api_controller';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { OrderReadAllResponse } from '@type/order/order.resp';
 import { OrderCreateResponse, OrderReadResponse } from '@type/order/order.resp';
-import { OrderCreateRequest, OrderJoinRequest } from '@type/order/order.req';
+import { OrderCreateRequest } from '@type/order/order.req';
 import { AuthHeader } from '@util/auth_header';
 import { OrderService } from './order.service';
 import { Order } from './order.entity';
 import { orderConverter } from '@type/order/order.converter';
 import { serialize, serializeAll } from '@util/serialize';
 import { RequestContext } from '@type/common/common.dto';
+import { OrderStep } from '@type/order/order.enum';
 
 @ApiTags('order')
 @ApiController('order')
@@ -50,9 +51,9 @@ export class OrderController {
     @Request() req: RequestContext,
     @Body() orderCreateRequest: OrderCreateRequest,
   ): Promise<OrderCreateResponse> {
-    return serialize(
-      await this.orderService.create(req.user, orderCreateRequest),
-    );
+    return {
+      id: (await this.orderService.create(req.user, orderCreateRequest)).id,
+    };
   }
 
   @UseGuards(JwtAuthGuard)
@@ -80,11 +81,11 @@ export class OrderController {
   @Get()
   async readAll(
     @Query('sortBy') sortBy: 'latest' | 'remaining',
-    @Query('categoryId') categoryId: number | undefined,
+    @Query('categoryId') categoryId: string | undefined,
     @Query('searchKey') searchKey: string,
   ): Promise<OrderReadAllResponse> {
     const orders = await this.orderService.readAllByQuery(
-      categoryId,
+      parseInt(categoryId),
       searchKey,
     );
     return {
@@ -116,8 +117,11 @@ export class OrderController {
     @Request() req: RequestContext,
     @Param('id') id: number,
   ): Promise<OrderReadResponse> {
-    return serialize(
-      orderConverter(await this.orderService.join(req.user, id)),
-    );
+    const order = await this.orderService.join(req.user, id);
+    if ((await order.participants).length >= order.maxParticipants) {
+      order.step = OrderStep.READY;
+      await order.save();
+    }
+    return serialize(orderConverter(order));
   }
 }
