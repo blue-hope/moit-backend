@@ -47,7 +47,6 @@ describe('UniversityController', () => {
     it('readAll - Success', async () => {
       return await request(app.getHttpServer())
         .get('/api/v1/university')
-        .set('Authorization', 'bearer token')
         .expect(HttpStatus.OK);
     });
   });

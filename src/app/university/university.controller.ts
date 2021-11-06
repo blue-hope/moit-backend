@@ -22,14 +22,12 @@ import { RequestContext } from '@type/common/common.dto';
 export class UniversityController {
   constructor(private readonly universityService: UniversityService) {}
 
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'read', description: 'University ReadAll' })
   @ApiHeader(AuthHeader)
   @ApiOkResponse({
     type: UniversityReadAllResponse,
   })
   @ApiBadRequestResponse()
-  @ApiUnauthorizedResponse()
   @HttpCode(HttpStatus.OK)
   @Get()
   async readAll(): Promise<UniversityReadAllResponse> {
