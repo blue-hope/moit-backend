@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { ApiController } from '@util/api_controller';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
-import { Category } from './category.entity';
+import { ReadAllResponse } from '@type/category/category.resp';
 
 @ApiTags('category')
 @ApiController('category')
@@ -17,10 +17,10 @@ export class CategoryController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'read', description: 'Category Read' })
-  @ApiBody({ type: [Category] })
+  @ApiBody({ type: ReadAllResponse })
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
   @HttpCode(HttpStatus.OK)
   @Get()
-  async readAll(@Request() req): Promise<Category[] | void> {}
+  async readAll(@Request() req): Promise<ReadAllResponse | void> {}
 }

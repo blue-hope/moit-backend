@@ -8,12 +8,13 @@ import {
   OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsString } from 'class-validator';
+import { IsDate, IsNumber, IsString } from 'class-validator';
 import { CastedColumn } from '@config/test/test.sqlite';
 import { Fee } from '@app/fee/fee.entity';
 import { Restaurant } from '@app/restaurant/restaurant.entity';
 import { User } from '@app/user/user.entity';
 import { Participant } from '@app/participant/participant.entity';
+import { OrderMenu } from '@app/orderMenu/order_menu.entity';
 
 @Entity()
 export class Order {
@@ -39,6 +40,10 @@ export class Order {
   @OneToMany(() => Participant, (participant) => participant.user)
   participants: Promise<Participant[]>;
 
+  @ApiProperty({ type: () => [OrderMenu] })
+  @OneToMany(() => OrderMenu, (orderMenu) => orderMenu.order)
+  orderMenus: Promise<OrderMenu[]>;
+
   @ApiProperty({ type: () => Fee })
   @ManyToOne(() => Fee)
   fee: Promise<Fee>;
@@ -46,12 +51,12 @@ export class Order {
   @ApiProperty()
   @IsString()
   @Column()
-  title: string;
+  message: string;
 
   @ApiProperty()
-  @IsString()
+  @IsNumber()
   @Column()
-  content: string;
+  maxParticipants: number;
 
   @ApiProperty()
   @IsDate()

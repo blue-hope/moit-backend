@@ -23,7 +23,6 @@ import {
   ApiHeader,
   ApiNotFoundResponse,
 } from '@nestjs/swagger';
-import { QueryFailedError } from 'typeorm';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { UserService } from '@app/user/user.service';
 import { CreateRequest, UpdateRequest } from '@type/user/user.req';
@@ -32,7 +31,6 @@ import { RequestContext } from '@type/common/common.dto';
 import {
   CreateResponse,
   ReadResponse,
-  IsNewUserResponse,
   UpdateResponse,
 } from '@type/user/user.resp';
 import { AuthHeader } from '@util/auth_header';

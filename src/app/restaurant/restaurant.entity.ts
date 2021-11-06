@@ -8,10 +8,9 @@ import {
   OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsString } from 'class-validator';
 import { Category } from '@app/category/category.entity';
 import { CastedColumn } from '@config/test/test.sqlite';
-import { Region } from '@app/region/region.entity';
 import { Menu } from '@app/menu/menu.entity';
 import { Fee } from '@app/fee/fee.entity';
 import { Order } from '@app/order/order.entity';
@@ -45,6 +44,11 @@ export class Restaurant {
   @ApiProperty({ type: () => [Order] })
   @OneToMany(() => Order, (order) => order.restaurant)
   orders: Promise<Order[]>;
+
+  @ApiProperty()
+  @IsString()
+  @Column()
+  name: string;
 
   @ApiProperty()
   @IsString()

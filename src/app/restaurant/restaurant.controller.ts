@@ -19,7 +19,10 @@ import {
 import { ApiController } from '@util/api_controller';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { Restaurant } from './restaurant.entity';
-import { CreateRestaurantDto } from '@type/restaurant/restaurant.dto';
+import {
+  ReadAllResponse,
+  ReadResponse,
+} from '@type/restaurant/restaurant.resp';
 
 @ApiTags('restaurant')
 @ApiController('restaurant')
@@ -28,24 +31,23 @@ export class RestaurantController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'create', description: 'Restaurant Create' })
-  @ApiBody({ type: Restaurant })
+  @ApiBody({ type: ReadResponse })
   @ApiOkResponse()
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
   @HttpCode(HttpStatus.OK)
   @Post()
-  async create(@Request() req): Promise<Restaurant | void> {}
+  async create(@Request() req): Promise<ReadResponse | void> {}
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'readAll', description: 'Restaurant Read' })
-  @ApiBody({ type: [Restaurant] })
+  @ApiOperation({ summary: 'readAll', description: 'Restaurant ReadAll' })
+  @ApiBody({ type: ReadAllResponse })
   @ApiOkResponse()
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
   @HttpCode(HttpStatus.OK)
   @Get()
   async readAll(
-    @Body() createRestaurantDto: CreateRestaurantDto,
-    @Query('categoryId') categoryId: number,
-  ): Promise<Restaurant[] | void> {}
+    @Query('searchKey') searchKey: string,
+  ): Promise<ReadAllResponse[] | void> {}
 }

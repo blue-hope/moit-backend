@@ -16,5 +16,5 @@ export class Category {
   @ApiProperty()
   @IsString()
   @Column()
-  title: string;
+  name: string;
 }

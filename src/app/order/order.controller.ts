@@ -1,11 +1,4 @@
-import {
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Get, HttpCode, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import {
   ApiTags,
   ApiOkResponse,
@@ -15,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { ApiController } from '@util/api_controller';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
-import { Order } from './order.entity';
+import { ReadAllResponse } from '@type/restaurant/restaurant.resp';
 
 @ApiTags('order')
 @ApiController('order')
@@ -24,10 +17,12 @@ export class OrderController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'read', description: 'Order Read' })
-  @ApiBody({ type: [Order] })
-  @ApiOkResponse()
+  @ApiOkResponse({ type: ReadAllResponse })
   @ApiUnauthorizedResponse()
   @HttpCode(HttpStatus.OK)
   @Get()
-  async readAll(@Request() req): Promise<Order[] | void> {}
+  async readAll(
+    @Query('sortBy') sortBy: 'latest' | 'remaining',
+    @Query('categoryId') categoryId?: number,
+  ): Promise<ReadAllResponse | void> {}
 }

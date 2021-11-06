@@ -1,7 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 import { Restaurant } from '@app/restaurant/restaurant.entity';
+import { OrderMenu } from '@app/orderMenu/order_menu.entity';
 
 @Entity()
 export class Menu {
@@ -16,10 +23,14 @@ export class Menu {
   })
   restaurant: Promise<Restaurant>;
 
+  @ApiProperty({ type: () => [OrderMenu] })
+  @OneToMany(() => OrderMenu, (orderMenu) => orderMenu.order)
+  orderMenus: Promise<OrderMenu[]>;
+
   @ApiProperty()
   @IsString()
   @Column()
-  title: string;
+  name: string;
 
   @ApiProperty()
   @IsNumber()

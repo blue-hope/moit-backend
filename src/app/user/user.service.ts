@@ -7,7 +7,6 @@ import {
 import { User } from '@app/user/user.entity';
 import { AuthService } from '@app/auth/auth.service';
 import { CreateRequest, UpdateRequest } from '@type/user/user.req';
-import { EntityNotFoundError } from 'typeorm';
 
 @Injectable()
 export class UserService {
