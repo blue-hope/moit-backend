@@ -47,8 +47,13 @@ export class RestaurantController {
   @HttpCode(HttpStatus.OK)
   @Get()
   async readAll(
-    @Query('searchKey') searchKey: string = '',
+    @Query('searchKey') searchKey: string,
   ): Promise<RestaurantReadAllResponse> {
+    if (searchKey === '')
+      return {
+        restaurants: [],
+      };
+
     const restaurants = await this.restaurantService.readAllByQuery(searchKey);
     return {
       restaurants: serializeAll(
@@ -59,7 +64,6 @@ export class RestaurantController {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'readAll',
     description: 'Restaurant ReadAll Orders on me',

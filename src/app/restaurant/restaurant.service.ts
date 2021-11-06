@@ -1,22 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { asyncFilter } from '@util/async_filter';
 import { Restaurant } from '@app/restaurant/restaurant.entity';
+import { Like } from 'typeorm';
 
 @Injectable()
 export class RestaurantService {
   constructor() {}
 
   async readAllByQuery(searchKey: string): Promise<Restaurant[]> {
-    const restaurants = await Restaurant.find({
+    return await Restaurant.find({
       relations: ['menus', 'fees', 'category'],
+      where: {
+        name: Like(`%${searchKey}%`),
+      },
       order: {
         createdAt: 'DESC',
       },
     });
-    const filter = async (restaurant) => {
-      return restaurant.name.includes(searchKey);
-    };
-    return asyncFilter(restaurants, filter); // TODO: use sql (not support lazy find?)
   }
 
   async read(id: number): Promise<Restaurant> {
