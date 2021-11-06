@@ -2,7 +2,7 @@ import * as bcrypt from 'bcryptjs';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryFailedError, Repository } from 'typeorm';
+import { EntityNotFoundError, QueryFailedError, Repository } from 'typeorm';
 import { UserService } from '@app/user/user.service';
 import { User } from '@app/user/user.entity';
 import { Auth } from '@app/auth/auth.entity';
@@ -17,13 +17,14 @@ export class AuthService {
   ) {}
 
   async comparePassword(user: User, inputPassword: string): Promise<boolean> {
-    const savedPassword = user.auth.password;
+    const auth = await user.auth;
+    const savedPassword = auth.password;
     return await bcrypt.compare(inputPassword, savedPassword);
   }
 
   async validate(email: string, password: string): Promise<boolean> {
     const user = await this.userService.readByEmail(email);
-    return user && (await this.comparePassword(user, password));
+    return !!user && (await this.comparePassword(user, password));
   }
 
   login(user: User): string {
@@ -36,8 +37,8 @@ export class AuthService {
   async create(user: User, password: string) {
     const { hashedPassword, salt } = await this.createHashedPassword(password);
     const authDto = {
-      user: user,
-      hashedPassword,
+      user: Promise.resolve(user),
+      password: hashedPassword,
       salt,
     };
     await Auth.create(authDto).save();
@@ -46,11 +47,10 @@ export class AuthService {
   async update(user: User, password: string) {
     const { hashedPassword, salt } = await this.createHashedPassword(password);
     const authDto = {
-      user: user,
-      hashedPassword,
+      password: hashedPassword,
       salt,
     };
-    await Auth.update(user.auth, authDto);
+    await Auth.update(await user.auth, authDto);
   }
 
   async createHashedPassword(

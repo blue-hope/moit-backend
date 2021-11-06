@@ -22,14 +22,14 @@ export class Zone {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  university: University;
+  university: Promise<University>;
 
   @ApiProperty({ type: () => Restaurant })
   @ManyToOne(() => Restaurant, (restaurant) => restaurant.zones, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  restaurant: Restaurant;
+  restaurant: Promise<Restaurant>;
 
   @ApiProperty()
   @IsDate()

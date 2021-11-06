@@ -2,7 +2,12 @@ import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { HttpService, HttpStatus, INestApplication } from '@nestjs/common';
+import {
+  HttpModule,
+  HttpService,
+  HttpStatus,
+  INestApplication,
+} from '@nestjs/common';
 import { AuthController } from '@app/auth/auth.controller';
 import { AuthService } from '@app/auth/auth.service';
 import { LocalStrategy } from '@app/auth/strategies/local.strategy';
@@ -10,6 +15,10 @@ import { UserModule } from '@app/user/user.module';
 import { UserService } from '@app/user/user.service';
 import { TestConnectionModule } from '@config/test/test.config';
 import { JwtConstant } from '@constant/jwt';
+import {
+  BadRequestInterceptor,
+  NotFoundInterceptor,
+} from '@interceptor/typeorm.interceptor';
 
 describe('AuthController', () => {
   let app: INestApplication;
@@ -22,6 +31,7 @@ describe('AuthController', () => {
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
       imports: [
+        HttpModule,
         UserModule,
         PassportModule,
         JwtModule.register({
@@ -44,9 +54,11 @@ describe('AuthController', () => {
       password: password,
       phoneNumber: '010-1234-5678',
     });
-    await userService.readByEmail(email);
+    await userService.readByEmail(email)!;
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalInterceptors(new BadRequestInterceptor());
+    app.useGlobalInterceptors(new NotFoundInterceptor());
     await app.init();
   });
 

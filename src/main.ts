@@ -7,6 +7,10 @@ import { SecretsManagerSingleton } from '@config/secrets_manager/secrets_manager
 import { CacheSingleton } from '@config/cache/cache';
 import { SentryInterceptor } from '@interceptor/sentry.interceptor';
 import { json } from 'express';
+import {
+  BadRequestInterceptor,
+  NotFoundInterceptor,
+} from '@interceptor/typeorm.interceptor';
 
 async function prepareSwagger(app: INestApplication) {
   const options = new DocumentBuilder()
@@ -56,6 +60,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  app.useGlobalInterceptors(new BadRequestInterceptor());
+  app.useGlobalInterceptors(new NotFoundInterceptor());
   app.use(json({ limit: '40mb' }));
   const port = process.env.PORT ?? 3000;
   await app.listen(port);

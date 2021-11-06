@@ -12,11 +12,11 @@ export class Region {
 
   @ApiProperty({ type: () => [User] })
   @OneToMany(() => User, (user) => user.region)
-  users: User[];
+  users: Promise<User[]>;
 
   @ApiProperty({ type: () => [University] })
   @OneToMany(() => University, (university) => university.region)
-  universities: University[];
+  universities: Promise<University[]>;
 
   @ApiProperty()
   @IsString()

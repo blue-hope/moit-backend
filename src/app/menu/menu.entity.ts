@@ -14,7 +14,7 @@ export class Menu {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  restaurant: Restaurant;
+  restaurant: Promise<Restaurant>;
 
   @ApiProperty()
   @IsString()

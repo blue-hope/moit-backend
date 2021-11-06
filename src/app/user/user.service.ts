@@ -7,6 +7,7 @@ import {
 import { User } from '@app/user/user.entity';
 import { AuthService } from '@app/auth/auth.service';
 import { CreateRequest, UpdateRequest } from '@type/user/user.req';
+import { EntityNotFoundError } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -37,13 +38,8 @@ export class UserService {
     await user.remove();
   }
 
-  async isNewUser(email: string): Promise<boolean> {
-    return (await this.readByEmail(email)) === undefined;
-  }
-
-  async readByEmail(email: string): Promise<User> {
-    return User.findOneOrFail({
-      relations: ['auth'],
+  async readByEmail(email: string): Promise<User | undefined> {
+    return await User.findOne({
       where: {
         email: email,
       },

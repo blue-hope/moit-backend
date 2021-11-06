@@ -11,6 +11,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  NotFoundException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -20,6 +21,7 @@ import {
   ApiOperation,
   ApiUnauthorizedResponse,
   ApiHeader,
+  ApiNotFoundResponse,
 } from '@nestjs/swagger';
 import { QueryFailedError } from 'typeorm';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
@@ -48,14 +50,7 @@ export class UserController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async create(@Body() createRequest: CreateRequest): Promise<CreateResponse> {
-    try {
-      return await this.userService.create(createRequest);
-    } catch (e) {
-      if (e instanceof QueryFailedError) {
-        throw new BadRequestException();
-      }
-      throw e;
-    }
+    return await this.userService.create(createRequest);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -69,19 +64,12 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @Get('me')
   async read(@Request() req: RequestContext): Promise<ReadResponse> {
-    try {
-      const user = req.user;
-      return {
-        ...user,
-        region_id: user.region.id,
-        university_id: user.university.id,
-      };
-    } catch (e) {
-      if (e instanceof QueryFailedError) {
-        throw new BadRequestException();
-      }
-      throw e;
-    }
+    const user = req.user;
+    return {
+      ...user,
+      region_id: (await user.region)?.id,
+      university_id: (await user.university)?.id,
+    };
   }
 
   @UseGuards(JwtAuthGuard)
@@ -110,33 +98,17 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @Delete()
   async delete(@Request() req: RequestContext) {
-    try {
-      return await this.userService.delete(req.user);
-    } catch (e) {
-      if (e instanceof QueryFailedError) {
-        throw new BadRequestException();
-      }
-      throw e;
-    }
+    return await this.userService.delete(req.user);
   }
 
-  @ApiOperation({ summary: 'isNewUser', description: 'User Unique Check' })
-  @ApiOkResponse({
-    type: IsNewUserResponse,
-  })
+  @ApiOperation({ summary: 'exist', description: 'User Exist Check' })
+  @ApiOkResponse()
   @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
   @HttpCode(HttpStatus.OK)
-  @Get('is-new-user')
-  async isNewUser(@Query('email') email: string): Promise<IsNewUserResponse> {
-    try {
-      return {
-        isNewUser: await this.userService.isNewUser(email),
-      };
-    } catch (e) {
-      if (e instanceof QueryFailedError) {
-        throw new BadRequestException();
-      }
-      throw e;
-    }
+  @Get('exist')
+  async isNewUser(@Query('email') email: string) {
+    if (!(await this.userService.readByEmail(email)))
+      throw new NotFoundException();
   }
 }

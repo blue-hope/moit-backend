@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '@app/user/user.service';
 import { JwtConstant } from '@constant/jwt';
 import { User } from '@app/user/user.entity';
@@ -21,6 +21,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     iat: number;
     exp: number;
   }): Promise<User> {
-    return await this.userService.readByEmail(jwtData.email);
+    const user = await this.userService.readByEmail(jwtData.email);
+    if (!user) throw new UnauthorizedException();
+    return user;
   }
 }

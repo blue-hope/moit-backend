@@ -26,22 +26,22 @@ export class Order {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  restaurant: Restaurant;
+  restaurant: Promise<Restaurant>;
 
   @ApiProperty({ type: () => User })
   @ManyToOne(() => User, (user) => user.orders, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  creator: User;
+  creator: Promise<User>;
 
   @ApiProperty({ type: () => [Participant] })
   @OneToMany(() => Participant, (participant) => participant.user)
-  participants: Participant[];
+  participants: Promise<Participant[]>;
 
   @ApiProperty({ type: () => Fee })
   @ManyToOne(() => Fee)
-  fee: Fee;
+  fee: Promise<Fee>;
 
   @ApiProperty()
   @IsString()

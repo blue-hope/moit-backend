@@ -28,23 +28,23 @@ export class Restaurant {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  category: Category;
+  category: Promise<Category>;
 
   @ApiProperty({ type: () => [Zone] })
   @OneToMany(() => Zone, (zone) => zone.restaurant)
-  zones: Zone[];
+  zones: Promise<Zone[]>;
 
   @ApiProperty({ type: () => [Menu] })
   @OneToMany(() => Menu, (menu) => menu.restaurant)
-  menus: Menu[];
+  menus: Promise<Menu[]>;
 
   @ApiProperty({ type: () => [Fee] })
   @OneToMany(() => Fee, (fee) => fee.restaurant)
-  fees: Fee[];
+  fees: Promise<Fee[]>;
 
   @ApiProperty({ type: () => [Order] })
   @OneToMany(() => Order, (order) => order.restaurant)
-  orders: Order[];
+  orders: Promise<Order[]>;
 
   @ApiProperty()
   @IsString()

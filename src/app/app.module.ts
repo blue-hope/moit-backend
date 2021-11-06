@@ -4,7 +4,6 @@ import { AppController } from '@app/app.controller';
 import { AppService } from '@app/app.service';
 import { UserModule } from '@app/user/user.module';
 import { AuthModule } from '@app/auth/auth.module';
-import { DefaultAdminModule } from 'nestjs-admin';
 import { CategoryModule } from './category/category.module';
 import { RestaurantModule } from './restaurant/restaurant.module';
 
@@ -16,7 +15,6 @@ import { RestaurantModule } from './restaurant/restaurant.module';
     AuthModule,
     CategoryModule,
     RestaurantModule,
-    // DefaultAdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

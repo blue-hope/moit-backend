@@ -11,7 +11,7 @@ export class Category {
 
   @ApiProperty({ type: () => [Restaurant] })
   @OneToMany(() => Restaurant, (restaurant) => restaurant.category)
-  restaurants: Restaurant[];
+  restaurants: Promise<Restaurant[]>;
 
   @ApiProperty()
   @IsString()

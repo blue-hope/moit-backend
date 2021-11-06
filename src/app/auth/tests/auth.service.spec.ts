@@ -44,40 +44,35 @@ describe('AuthService', () => {
       password: password,
       phoneNumber: '010-1234-5678',
     });
-    user = await userService.readByEmail(email);
+    user = await userService.readByEmail(email)!;
   });
 
-  it('bcryptCompareUser - Success', async () => {
+  it('comparePassword - Success', async () => {
     const result = await service.comparePassword(user, 'password');
     expect(result).toBe(true);
   });
 
-  it('bcryptCompareUser - Fail', async () => {
+  it('comparePassword - Fail', async () => {
     const result = await service.comparePassword(user, 'wrong_password');
     expect(result).toBe(false);
   });
 
   it('validate - Success', async () => {
     const result = await service.validate(user.email, password);
-    expect(result).toBeInstanceOf(User);
+    expect(result).toBe(true);
   });
 
   it('validate - Fail', async () => {
-    const result = await service.validate('no@email.com', password);
-    expect(result).toBeNull();
+    const result = await service.validate('no@email.com', 'wrong_password');
+    expect(result).toBe(false);
   });
 
-  it('login - Success', async () => {
-    const result = await service.login(user);
-    expect(Object.keys(result).toString()).toBe('access_token');
+  it('login - Success', () => {
+    const result = service.login(user);
+    expect(result.split('.')).toHaveLength(3); // jwt rule
   });
 
   it('create - Success', async () => {
     // pass - test on user service
-  });
-
-  it('create - Success (constraint failure avoidance)', async () => {
-    const result = await service.create(user, password);
-    expect(result).toBeInstanceOf(Auth);
   });
 });

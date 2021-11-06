@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { QueryFailedError } from 'typeorm';
+import { EntityNotFoundError, QueryFailedError } from 'typeorm';
 import { MustBeEntityError } from 'typeorm/error/MustBeEntityError';
 import { AuthModule } from '@app/auth/auth.module';
 import { AuthService } from '@app/auth/auth.service';
@@ -61,51 +61,47 @@ describe('UserService', () => {
 
   it('readByEmail - Fail', async () => {
     const result = await service.readByEmail('other@email.com');
-    expect(result).toBe(undefined);
-  });
-
-  it('isNewUser - Success(non-duplicated)', async () => {
-    const newEmail = 'new@email.com';
-    const result = await service.isNewUser(newEmail);
-    expect(result).toBe(true);
-  });
-
-  it('isNewUser - Fail(duplicated)', async () => {
-    const result = await service.isNewUser(email);
-    expect(result).toBe(false);
+    expect(result).toBeUndefined();
   });
 
   it('update - Success', async () => {
-    const user = await service.readByEmail(email);
-    const UpdateUserDto = {
+    const user = await service.readByEmail(email)!;
+    const updateRequest = {
       originalPassword: 'password',
       password: 'newPassword',
-      name: 'newName',
     };
-    const updateResult = await service.update(user, UpdateUserDto);
-    expect(updateResult.name).toBe(UpdateUserDto.name);
-    const updatedUser = await authService.validate(
+    await service.update(user, updateRequest);
+    const isNewPasswordValid = await authService.validate(
       email,
-      UpdateUserDto.password,
+      updateRequest.password,
     );
-    expect(updatedUser).toBeInstanceOf(User);
+    expect(isNewPasswordValid).toBe(true);
+  });
+
+  it('delete - Success', async () => {
+    const user = await service.readByEmail(email)!;
+    await service.delete(user);
+    try {
+      await service.readByEmail(email);
+    } catch (e) {
+      expect(e).toBeInstanceOf(EntityNotFoundError);
+    }
   });
 
   it('delete - Fail', async () => {
-    const user = await service.readByEmail(email);
+    const result = await service.create({
+      email: email,
+      name: 'name',
+      password: 'password',
+      phoneNumber: '010-1234-5678',
+    });
+    expect(result).toBeInstanceOf(User);
+    const user = await service.readByEmail(email)!;
     user.id = 0;
     try {
       await service.delete(user);
     } catch (e) {
-      expect(e).toBeInstanceOf(MustBeEntityError);
+      expect(e).toBeInstanceOf(EntityNotFoundError);
     }
-  });
-
-  it('delete - Success', async () => {
-    const user = await service.readByEmail(email);
-    const result = await service.delete(user);
-    expect(result).toBeInstanceOf(User);
-    const deletedUser = await service.readByEmail(email);
-    expect(deletedUser).toBe(undefined);
   });
 });

@@ -22,14 +22,14 @@ export class Participant {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  order: Order;
+  order: Promise<Order>;
 
   @ApiProperty({ type: () => User })
   @ManyToOne(() => User, (user) => user.participants, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  user: User;
+  user: Promise<User>;
 
   @ApiProperty()
   @IsDate()

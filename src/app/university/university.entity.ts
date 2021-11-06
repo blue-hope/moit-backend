@@ -22,15 +22,15 @@ export class University {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  region: Region;
+  region: Promise<Region>;
 
   @ApiProperty({ type: () => [User] })
   @OneToMany(() => User, (user) => user.university)
-  users: User[];
+  users: Promise<User[]>;
 
   @ApiProperty({ type: () => [Zone] })
   @OneToMany(() => Zone, (zone) => zone.university)
-  zones: Zone[];
+  zones: Promise<Zone[]>;
 
   @ApiProperty()
   @IsString()

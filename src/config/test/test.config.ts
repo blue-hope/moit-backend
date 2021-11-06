@@ -1,9 +1,18 @@
 import { Auth } from '@app/auth/auth.entity';
+import { Category } from '@app/category/category.entity';
+import { Fee } from '@app/fee/fee.entity';
+import { Menu } from '@app/menu/menu.entity';
+import { Order } from '@app/order/order.entity';
+import { Participant } from '@app/participant/participant.entity';
+import { Region } from '@app/region/region.entity';
+import { Restaurant } from '@app/restaurant/restaurant.entity';
+import { University } from '@app/university/university.entity';
 import { User } from '@app/user/user.entity';
+import { Zone } from '@app/zone/zone.entity';
 import { DynamicModule } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
-import AdminUser from 'nestjs-admin/dist/src/adminUser/adminUser.entity';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 type Entity = EntityClassOrSchema;
 
@@ -16,10 +25,23 @@ export const createTestConfiguration = (
   dropSchema: true,
   synchronize: true,
   logging: false,
+  namingStrategy: new SnakeNamingStrategy(),
 });
 
 function getDefaultEntities() {
-  return [User, Auth, AdminUser];
+  return [
+    User,
+    Auth,
+    Region,
+    University,
+    Zone,
+    Restaurant,
+    Category,
+    Menu,
+    Fee,
+    Order,
+    Participant,
+  ];
 }
 
 export const TestConnectionModule: (

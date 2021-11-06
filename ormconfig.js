@@ -9,8 +9,7 @@ let testConfig =
     ? require(__dirname + '/src/config/test/test.config.ts')
     : undefined;
 
-const AdminUser = require('nestjs-admin').AdminUserEntity;
-const defaultEntity = [AdminUser];
+const defaultEntity = [];
 
 if (node_env === 'local' || node_env === undefined) {
   databaseConfig = {

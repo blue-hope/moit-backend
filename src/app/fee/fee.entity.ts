@@ -22,21 +22,21 @@ export class Fee {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  restaurant: Restaurant;
+  restaurant: Promise<Restaurant>;
 
   @ApiProperty()
   @IsNumber()
-  @Column()
+  @Column({ name: 'price_start' })
   priceStart: number;
 
   @ApiProperty()
   @IsNumber()
-  @Column()
+  @Column({ name: 'price_end' })
   priceEnd: number;
 
   @ApiProperty()
   @IsNumber()
-  @Column()
+  @Column({ name: 'delivery_fee' })
   deliveryFee: number;
 
   @ApiProperty()

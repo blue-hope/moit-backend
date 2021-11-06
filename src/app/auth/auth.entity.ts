@@ -4,13 +4,15 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   BaseEntity,
+  JoinColumn,
 } from 'typeorm';
 import { User } from '@app/user/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
+import { BaseEntityImpl } from '@util/base_entity_impl';
 
 @Entity()
-export class Auth extends BaseEntity {
+export class Auth extends BaseEntityImpl {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
@@ -18,8 +20,10 @@ export class Auth extends BaseEntity {
   @ApiProperty({ type: () => User })
   @OneToOne(() => User, (user) => user.auth, {
     onDelete: 'CASCADE',
+    cascade: true,
   })
-  user: User;
+  @JoinColumn()
+  user: Promise<User>;
 
   @ApiProperty()
   @IsString()
