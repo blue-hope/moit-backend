@@ -49,7 +49,7 @@ jobs:
             --source-bundle S3Bucket=\"elasticbeanstalk-ap-northeast-2-539820303388\",S3Key=\"prod/${{ env.IMAGE_TAG }}-Dockerrun.aws.json\"
           aws elasticbeanstalk update-environment \
             --application-name moit-server \
-            --environment-name Moitserver-env \
+            --environment-name moit-server-prod \
             --solution-stack-name "64bit Amazon Linux 2 v3.4.5 running Docker" \
             --version-label ${{ env.IMAGE_TAG }}
       - name: Logout of Amazon ECR
