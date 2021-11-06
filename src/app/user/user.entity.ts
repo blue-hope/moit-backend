@@ -71,7 +71,7 @@ export class User extends BaseEntityImpl {
   name: string;
 
   @ApiProperty()
-  @IsPhoneNumber()
+  @IsString()
   @Column({ unique: true })
   phoneNumber: string;
 

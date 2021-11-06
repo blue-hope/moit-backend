@@ -32,6 +32,7 @@ import {
   UserUpdateResponse,
 } from '@type/user/user.resp';
 import { AuthHeader } from '@util/auth_header';
+import { SocialProvider } from '@app/oauth/oauth.enum';
 
 @ApiTags('user')
 @ApiController('user')
@@ -48,7 +49,10 @@ export class UserController {
   async create(
     @Body() createRequest: UserCreateRequest,
   ): Promise<UserCreateResponse> {
-    return await this.userService.create(createRequest);
+    return await this.userService.create({
+      ...createRequest,
+      provider: SocialProvider.LOCAL,
+    });
   }
 
   @UseGuards(JwtAuthGuard)

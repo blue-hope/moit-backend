@@ -20,9 +20,7 @@ export class UserCreateRequest {
   @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
   password: string;
 
-  @ApiProperty()
-  @IsString()
-  provider: SocialProvider = SocialProvider.GOOGLE;
+  provider: SocialProvider;
 }
 
 export class UserUpdateRequest {
