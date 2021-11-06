@@ -21,10 +21,10 @@ export class RestaurantReadResponse {
   @IsString()
   categoryName: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => [MenuReadResponse] })
   menus: MenuReadResponse[];
 
-  @ApiProperty()
+  @ApiProperty({ type: () => [FeeReadResponse] })
   fees: FeeReadResponse[];
 
   @ApiProperty()
