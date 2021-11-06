@@ -1,12 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsDate, IsNumber, IsString } from 'class-validator';
 
-export class ReadAllResponse {
+export class OrderCreateResponse {
   @ApiProperty()
-  orders: ReadResponse[];
+  @IsNumber()
+  id: number;
 }
 
-export class ReadResponse {
+export class OrderReadAllResponse {
+  @ApiProperty({ type: () => [OrderReadResponse] })
+  orders: OrderReadResponse[];
+}
+
+export class OrderReadResponse {
   @ApiProperty()
   @IsNumber()
   id: number;
@@ -50,4 +56,13 @@ export class ReadResponse {
   @ApiProperty()
   @IsDate()
   updatedAt: Date;
+}
+
+export class OrderJoinResponse {
+  @ApiProperty({ type: () => OrderReadResponse })
+  order: OrderReadResponse;
+
+  @ApiProperty()
+  @IsBoolean()
+  success: boolean;
 }

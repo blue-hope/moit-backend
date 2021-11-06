@@ -10,8 +10,8 @@ import {
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { ApiController } from '@util/api_controller';
 import {
-  ReadResponse,
-  ReadAllResponse,
+  UniversityReadResponse,
+  UniversityReadAllResponse,
 } from '@type/university/university.resp';
 import { AuthHeader } from '@util/auth_header';
 
@@ -24,23 +24,23 @@ export class UniversityController {
   @ApiOperation({ summary: 'read', description: 'University ReadAll' })
   @ApiHeader(AuthHeader)
   @ApiOkResponse({
-    type: ReadAllResponse,
+    type: UniversityReadAllResponse,
   })
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
   @HttpCode(HttpStatus.OK)
   @Get()
-  async readAll(): Promise<ReadAllResponse | void> {}
+  async readAll(): Promise<UniversityReadAllResponse | void> {}
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'read', description: 'University Read (Me)' })
   @ApiHeader(AuthHeader)
   @ApiOkResponse({
-    type: ReadResponse,
+    type: UniversityReadResponse,
   })
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
   @HttpCode(HttpStatus.OK)
   @Get('me')
-  async read(): Promise<ReadResponse | void> {}
+  async read(): Promise<UniversityReadResponse | void> {}
 }

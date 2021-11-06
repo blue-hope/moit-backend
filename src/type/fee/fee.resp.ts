@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
 
-export class ReadResponse {
+export class FeeReadResponse {
   @ApiProperty()
+  @IsNumber()
   id: number;
 
   @ApiProperty()

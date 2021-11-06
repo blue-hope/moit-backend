@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsNumber, IsString } from 'class-validator';
@@ -15,12 +16,17 @@ import { Restaurant } from '@app/restaurant/restaurant.entity';
 import { User } from '@app/user/user.entity';
 import { Participant } from '@app/participant/participant.entity';
 import { OrderMenu } from '@app/orderMenu/order_menu.entity';
+import { Purchasement } from '@app/purchasement/purchasement.entity';
 
 @Entity()
 export class Order {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
+
+  @ApiProperty({ type: () => Purchasement })
+  @OneToOne(() => Purchasement, (purchasement) => purchasement.order)
+  purchasement: Promise<Purchasement>;
 
   @ApiProperty({ type: () => Restaurant })
   @ManyToOne(() => Restaurant, (restaurant) => restaurant.orders, {

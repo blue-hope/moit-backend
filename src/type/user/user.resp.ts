@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsDate, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsNumber, IsString } from 'class-validator';
 
-export class CreateResponse {
+export class UserCreateResponse {
   @ApiProperty()
   @IsNumber()
   id: number;
@@ -11,18 +11,18 @@ export class CreateResponse {
   email: string;
 }
 
-export class ReadResponse {
+export class UserReadResponse {
   @ApiProperty()
   @IsNumber()
   id: number;
 
   @ApiProperty()
   @IsNumber()
-  region_id: number;
+  regionId: number;
 
   @ApiProperty()
   @IsNumber()
-  university_id: number;
+  universityId: number;
 
   @ApiProperty()
   @IsString()
@@ -45,7 +45,7 @@ export class ReadResponse {
   updatedAt: Date;
 }
 
-export class UpdateResponse {
+export class UserUpdateResponse {
   @ApiProperty()
   @IsString()
   email?: string;
@@ -57,10 +57,4 @@ export class UpdateResponse {
   @ApiProperty()
   @IsString()
   phoneNumber?: string;
-}
-
-export class IsNewUserResponse {
-  @ApiProperty()
-  @IsBoolean()
-  isNewUser: boolean;
 }

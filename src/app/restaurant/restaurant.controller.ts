@@ -20,8 +20,8 @@ import { ApiController } from '@util/api_controller';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { Restaurant } from './restaurant.entity';
 import {
-  ReadAllResponse,
-  ReadResponse,
+  RestaurantReadAllResponse,
+  RestaurantReadResponse,
 } from '@type/restaurant/restaurant.resp';
 
 @ApiTags('restaurant')
@@ -31,17 +31,17 @@ export class RestaurantController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'create', description: 'Restaurant Create' })
-  @ApiBody({ type: ReadResponse })
+  @ApiBody({ type: RestaurantReadResponse })
   @ApiOkResponse()
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
   @HttpCode(HttpStatus.OK)
   @Post()
-  async create(@Request() req): Promise<ReadResponse | void> {}
+  async create(@Request() req): Promise<RestaurantReadResponse | void> {}
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'readAll', description: 'Restaurant ReadAll' })
-  @ApiBody({ type: ReadAllResponse })
+  @ApiBody({ type: RestaurantReadAllResponse })
   @ApiOkResponse()
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
@@ -49,5 +49,5 @@ export class RestaurantController {
   @Get()
   async readAll(
     @Query('searchKey') searchKey: string,
-  ): Promise<ReadAllResponse[] | void> {}
+  ): Promise<RestaurantReadAllResponse[] | void> {}
 }

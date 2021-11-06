@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, Matches } from 'class-validator';
 
-export class CreateRequest {
+export class UserCreateRequest {
   @ApiProperty()
   @IsString()
   email: string;
@@ -22,7 +22,7 @@ export class CreateRequest {
   password: string;
 }
 
-export class UpdateRequest {
+export class UserUpdateRequest {
   @ApiProperty()
   @IsString()
   @Matches(

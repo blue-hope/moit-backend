@@ -8,19 +8,19 @@ import {
 } from '@nestjs/swagger';
 import { ApiController } from '@util/api_controller';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
-import { CategoryReadAllResponse } from '@type/category/category.resp';
+import { PurchasementReadAllResponse } from '@type/purchasement/purchasement.resp';
 
-@ApiTags('category')
-@ApiController('category')
-export class CategoryController {
+@ApiTags('purchasement')
+@ApiController('purchasement')
+export class PurchasementController {
   constructor() {}
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'read', description: 'Category Read' })
-  @ApiBody({ type: CategoryReadAllResponse })
+  @ApiOperation({ summary: 'read', description: 'Purchasement Read' })
+  @ApiBody({ type: PurchasementReadAllResponse })
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
   @HttpCode(HttpStatus.OK)
   @Get()
-  async readAll(@Request() req): Promise<CategoryReadAllResponse | void> {}
+  async readAll(@Request() req): Promise<PurchasementReadAllResponse | void> {}
 }

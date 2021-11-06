@@ -25,13 +25,13 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { UserService } from '@app/user/user.service';
-import { CreateRequest, UpdateRequest } from '@type/user/user.req';
+import { UserCreateRequest, UserUpdateRequest } from '@type/user/user.req';
 import { ApiController } from '@util/api_controller';
 import { RequestContext } from '@type/common/common.dto';
 import {
-  CreateResponse,
-  ReadResponse,
-  UpdateResponse,
+  UserCreateResponse,
+  UserReadResponse,
+  UserUpdateResponse,
 } from '@type/user/user.resp';
 import { AuthHeader } from '@util/auth_header';
 
@@ -42,12 +42,14 @@ export class UserController {
 
   @ApiOperation({ summary: 'create', description: 'User Create' })
   @ApiCreatedResponse({
-    type: CreateResponse,
+    type: UserCreateResponse,
   })
   @ApiBadRequestResponse()
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  async create(@Body() createRequest: CreateRequest): Promise<CreateResponse> {
+  async create(
+    @Body() createRequest: UserCreateRequest,
+  ): Promise<UserCreateResponse> {
     return await this.userService.create(createRequest);
   }
 
@@ -55,18 +57,18 @@ export class UserController {
   @ApiOperation({ summary: 'read', description: 'User Read (Me)' })
   @ApiHeader(AuthHeader)
   @ApiOkResponse({
-    type: ReadResponse,
+    type: UserReadResponse,
   })
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
   @HttpCode(HttpStatus.OK)
   @Get('me')
-  async read(@Request() req: RequestContext): Promise<ReadResponse> {
+  async read(@Request() req: RequestContext): Promise<UserReadResponse> {
     const user = req.user;
     return {
       ...user,
-      region_id: (await user.region)?.id,
-      university_id: (await user.university)?.id,
+      regionId: (await user.region)?.id,
+      universityId: (await user.university)?.id,
     };
   }
 
@@ -74,7 +76,7 @@ export class UserController {
   @ApiOperation({ summary: 'update', description: 'User Update' })
   @ApiHeader(AuthHeader)
   @ApiOkResponse({
-    type: UpdateResponse,
+    type: UserUpdateResponse,
   })
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
@@ -82,8 +84,8 @@ export class UserController {
   @Patch()
   async update(
     @Request() req: RequestContext,
-    @Body() updateRequest: UpdateRequest,
-  ): Promise<UpdateResponse> {
+    @Body() updateRequest: UserUpdateRequest,
+  ): Promise<UserUpdateResponse> {
     return await this.userService.update(req.user, updateRequest);
   }
 

@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { User } from '@app/user/user.entity';
 import { AuthService } from '@app/auth/auth.service';
-import { CreateRequest, UpdateRequest } from '@type/user/user.req';
+import { UserCreateRequest, UserUpdateRequest } from '@type/user/user.req';
 
 @Injectable()
 export class UserService {
@@ -15,14 +15,14 @@ export class UserService {
     private readonly authService: AuthService,
   ) {}
 
-  async create(CreateRequest: CreateRequest): Promise<User> {
+  async create(CreateRequest: UserCreateRequest): Promise<User> {
     const { password, ...userDto } = CreateRequest;
     const user = await User.create(userDto).save();
     await this.authService.create(user, password);
     return user;
   }
 
-  async update(user: User, updateRequest: UpdateRequest): Promise<User> {
+  async update(user: User, updateRequest: UserUpdateRequest): Promise<User> {
     const { password, originalPassword } = updateRequest;
     if (await this.authService.validate(user.email, originalPassword)) {
       await this.authService.update(user, password);

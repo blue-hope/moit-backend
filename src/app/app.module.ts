@@ -8,6 +8,7 @@ import { CategoryModule } from './category/category.module';
 import { RestaurantModule } from './restaurant/restaurant.module';
 import { OrderModule } from './order/order.module';
 import { UniversityModule } from './university/university.module';
+import { PurchasementModule } from './purchasement/purchasement.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UniversityModule } from './university/university.module';
     RestaurantModule,
     OrderModule,
     UniversityModule,
+    PurchasementModule,
   ],
   controllers: [AppController],
   providers: [AppService],

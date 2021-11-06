@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
-export class ReadAllResponse {
-  @ApiProperty()
-  categories: ReadResponse[];
+export class CategoryReadAllResponse {
+  @ApiProperty({ type: () => CategoryReadResponse })
+  categories: CategoryReadResponse[];
 }
 
-export class ReadResponse {
+export class CategoryReadResponse {
   @ApiProperty()
   @IsNumber()
   id: number;

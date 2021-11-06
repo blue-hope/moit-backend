@@ -3,7 +3,6 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as Sentry from '@sentry/node';
 import { AppModule } from '@app/app.module';
-import { SecretsManagerSingleton } from '@config/secrets_manager/secrets_manager';
 import { CacheSingleton } from '@config/cache/cache';
 import { SentryInterceptor } from '@interceptor/sentry.interceptor';
 import { json } from 'express';
@@ -23,33 +22,22 @@ async function prepareSwagger(app: INestApplication) {
   SwaggerModule.setup('swagger', app, document);
 }
 
-async function prepareAWSSecretManager() {
-  if (process.env.NODE_ENV === 'production') {
-    await SecretsManagerSingleton.prepare(['prod/server/key']);
-  }
-}
-
 async function prepareSentry(app: INestApplication) {
   if (process.env.NODE_ENV === 'production') {
     await Sentry.init({
-      dsn: SecretsManagerSingleton.getValue('SENTRY_DSN'),
+      dsn: process.env.SENTRY_DSN ?? '',
     });
     app.useGlobalInterceptors(new SentryInterceptor());
   }
 }
 
 async function prepareCache() {
-  if (process.env.NODE_ENV === 'production') {
-    await CacheSingleton.prepareRedis();
-  } else {
-    await CacheSingleton.prepareMemcache();
-  }
+  await CacheSingleton.prepareMemcache();
 }
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await prepareSwagger(app);
-  await prepareAWSSecretManager();
   await prepareSentry(app);
   await prepareCache();
   app.enableCors();

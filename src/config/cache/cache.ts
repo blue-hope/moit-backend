@@ -1,17 +1,9 @@
 import * as CacheManager from 'cache-manager';
-import { redisStore } from 'cache-manager-redis-store';
-import redisConfig from './redis.config';
 
 export const CacheSingleton = (function () {
   const ttl = 60;
   let manager;
   return {
-    prepareRedis: function () {
-      manager = CacheManager.caching({
-        store: redisStore,
-        ...redisConfig,
-      }).set;
-    },
     prepareMemcache: function () {
       manager = CacheManager.caching({
         store: 'memory',

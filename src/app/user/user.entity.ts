@@ -8,7 +8,13 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { IsDate, IsEmail, IsPhoneNumber, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsEmail,
+  IsNumber,
+  IsPhoneNumber,
+  IsString,
+} from 'class-validator';
 import { Auth } from '@app/auth/auth.entity';
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { CastedColumn } from '@config/test/test.sqlite';
@@ -17,6 +23,7 @@ import { Order } from '@app/order/order.entity';
 import { Participant } from '@app/participant/participant.entity';
 import { University } from '@app/university/university.entity';
 import { BaseEntityImpl } from '@util/base_entity_impl';
+import { Purchasement } from '@app/purchasement/purchasement.entity';
 
 @Entity()
 export class User extends BaseEntityImpl {
@@ -44,6 +51,10 @@ export class User extends BaseEntityImpl {
   @OneToMany(() => Participant, (participant) => participant.user)
   participants: Promise<Participant[]>;
 
+  @ApiProperty({ type: () => [Purchasement] })
+  @OneToMany(() => Purchasement, (purchasement) => purchasement.user)
+  purchasements: Promise<Purchasement[]>;
+
   @ApiProperty()
   @IsEmail()
   @Column({ unique: true })
@@ -58,6 +69,11 @@ export class User extends BaseEntityImpl {
   @IsPhoneNumber()
   @Column({ unique: true })
   phoneNumber: string;
+
+  @ApiProperty()
+  @IsNumber()
+  @Column()
+  point: string;
 
   @ApiProperty()
   @IsDate()
