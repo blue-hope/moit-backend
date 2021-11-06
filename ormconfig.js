@@ -18,8 +18,9 @@ const productionTypeOrmConfig =
         cli: {
           migrationsDir: 'src/migration',
         },
+        entities: ['src/app/**/*.entity.ts', ...defaultEntity],
       }
-    : {};
+    : { entities: ['dist/app/**/*.entity.js', ...defaultEntity] };
 
 if (node_env === 'local' || node_env === undefined) {
   databaseConfig = {
@@ -34,7 +35,6 @@ if (node_env === 'local' || node_env === undefined) {
   databaseConfig = {
     ...databaseConfig,
     ...productionTypeOrmConfig,
-    entities: ['dist/app/**/*.entity.js', ...defaultEntity],
   };
 } else if (node_env === 'test') {
   databaseConfig = {

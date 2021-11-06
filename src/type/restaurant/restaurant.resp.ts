@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { FeeReadResponse } from '@type/fee/fee.resp';
 import { MenuReadResponse } from '@type/menu/menu.resp';
+import { OrderReadResponse } from '@type/order/order.resp';
 import { IsDate, IsNumber, IsString } from 'class-validator';
 
 export class RestaurantReadAllResponse {
@@ -38,4 +39,25 @@ export class RestaurantReadResponse {
   @ApiProperty()
   @IsDate()
   closeAt: Date;
+}
+
+export class RestaurantReadAllOrdersResponse {
+  @ApiProperty({ type: () => [OrderReadResponse] })
+  orders: OrderReadResponse[];
+
+  @ApiProperty()
+  @IsNumber()
+  totalOrderCount: number;
+
+  @ApiProperty()
+  @IsNumber()
+  readyOrderCount: number;
+
+  @ApiProperty()
+  @IsNumber()
+  cookingOrderCount: number;
+
+  @ApiProperty()
+  @IsNumber()
+  completedOrderCount: number;
 }

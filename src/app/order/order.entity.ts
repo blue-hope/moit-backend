@@ -18,6 +18,7 @@ import { Participant } from '@app/participant/participant.entity';
 import { OrderMenu } from '@app/orderMenu/order_menu.entity';
 import { Purchasement } from '@app/purchasement/purchasement.entity';
 import { BaseEntityImpl } from '@util/base_entity_impl';
+import { OrderStep } from '@type/order/order.enum';
 
 @Entity()
 export class Order extends BaseEntityImpl {
@@ -64,6 +65,11 @@ export class Order extends BaseEntityImpl {
   @IsNumber()
   @Column()
   maxParticipants: number;
+
+  @ApiProperty()
+  @IsString()
+  @Column()
+  step: OrderStep;
 
   @ApiProperty()
   @IsDate()

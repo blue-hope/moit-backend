@@ -3,6 +3,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   Query,
   Request,
@@ -20,9 +21,11 @@ import { ApiController } from '@util/api_controller';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { Restaurant } from './restaurant.entity';
 import {
+  RestaurantReadAllOrdersResponse,
   RestaurantReadAllResponse,
   RestaurantReadResponse,
 } from '@type/restaurant/restaurant.resp';
+import { OrderReadAllResponse } from '@type/order/order.resp';
 
 @ApiTags('restaurant')
 @ApiController('restaurant')
@@ -49,5 +52,20 @@ export class RestaurantController {
   @Get()
   async readAll(
     @Query('searchKey') searchKey: string,
-  ): Promise<RestaurantReadAllResponse[] | void> {}
+  ): Promise<RestaurantReadAllResponse | void> {}
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'readAll',
+    description: 'Restaurant ReadAll Orders on me',
+  })
+  @ApiBody({ type: RestaurantReadAllOrdersResponse })
+  @ApiOkResponse()
+  @ApiBadRequestResponse()
+  @ApiUnauthorizedResponse()
+  @HttpCode(HttpStatus.OK)
+  @Get(':id/orders')
+  async readAllOrders(
+    @Param('id') restaurantId: number,
+  ): Promise<RestaurantReadAllOrdersResponse | void> {}
 }
