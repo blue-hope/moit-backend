@@ -8,6 +8,7 @@ import {
   BadRequestInterceptor,
   NotFoundInterceptor,
 } from '@interceptor/typeorm.interceptor';
+import { SecretsManagerSingleton } from '@config/secrets_manager/secrets_manager';
 
 async function prepareSwagger(app: INestApplication) {
   const options = new DocumentBuilder()
@@ -20,6 +21,10 @@ async function prepareSwagger(app: INestApplication) {
   SwaggerModule.setup('swagger', app, document);
 }
 
+async function prepareAWSSecretManager() {
+  await SecretsManagerSingleton.prepare(['prod/server/key']);
+}
+
 async function prepareCache() {
   await CacheSingleton.prepareMemcache();
 }
@@ -27,6 +32,7 @@ async function prepareCache() {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await prepareSwagger(app);
+  await prepareAWSSecretManager();
   await prepareCache();
   app.enableCors();
   app.useGlobalPipes(

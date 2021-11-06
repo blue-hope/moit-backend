@@ -23,6 +23,10 @@ if (node_env === 'local' || node_env === undefined) {
 } else if (node_env === 'production') {
   databaseConfig = {
     ...databaseConfig,
+    migrations: ['src/migration/*.ts'],
+    cli: {
+      migrationsDir: 'src/migration',
+    },
     entities: ['dist/app/**/*.entity.js', ...defaultEntity],
   };
 } else if (node_env === 'test') {
