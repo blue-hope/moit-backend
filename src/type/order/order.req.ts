@@ -17,7 +17,6 @@ export class OrderCreateRequest {
   restaurantId: number;
 
   @ApiProperty({ type: () => [OrderCreateRequestMenu] })
-  @IsString()
   menus: OrderCreateRequestMenu[];
 
   @ApiProperty()
