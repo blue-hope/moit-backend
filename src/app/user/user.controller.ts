@@ -76,8 +76,8 @@ export class UserController {
     return serialize({
       ...user,
       manner: manners.reduce((prev, cur) => prev + cur, 0) / manners.length,
-      regionId: (await user.region)?.id,
-      universityId: (await user.university)?.id,
+      regionName: (await user.region).name,
+      universityName: (await user.university).name,
     });
   }
 

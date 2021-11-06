@@ -17,12 +17,12 @@ export class UserReadResponse {
   id: number;
 
   @ApiProperty()
-  @IsNumber()
-  regionId: number;
+  @IsString()
+  regionName: string;
 
   @ApiProperty()
-  @IsNumber()
-  universityId: number;
+  @IsString()
+  universityName: string;
 
   @ApiProperty()
   @IsString()

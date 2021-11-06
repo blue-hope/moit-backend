@@ -69,7 +69,7 @@ export async function orderConverterForRestaurant(
     creatorId: creator.id,
     creatorPhoneNumber: creator.phoneNumber,
     nowParticipants: participants.length,
-    deliveryLocation: (await creator.university)?.name ?? '',
+    deliveryLocation: (await creator.region).name,
     participantsName: await Promise.all(
       participants.map(async (participant) => (await participant.user).name),
     ),
