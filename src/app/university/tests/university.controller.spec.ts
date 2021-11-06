@@ -7,8 +7,8 @@ import {
   BadRequestInterceptor,
   NotFoundInterceptor,
 } from '@interceptor/typeorm.interceptor';
-import { CategoryController } from '../category.controller';
-import { CategoryService } from '../category.service';
+import { UniversityController } from '../university.controller';
+import { UniversityService } from '../university.service';
 
 jest.mock('jsonwebtoken', () => ({
   verify: jest.fn((token, secretOrKey, options, callback) => {
@@ -19,14 +19,14 @@ jest.mock('jsonwebtoken', () => ({
   }),
 }));
 
-describe('CategoryController', () => {
+describe('UniversityController', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
       imports: [AuthModule, ...(await TestConnectionModule('all'))],
-      controllers: [CategoryController],
-      providers: [CategoryService],
+      controllers: [UniversityController],
+      providers: [UniversityService],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -43,10 +43,10 @@ describe('CategoryController', () => {
     await request(app.getHttpServer()).post('/api/v1/user').send(data);
   });
 
-  describe('/api/v1/category', () => {
+  describe('/api/v1/university', () => {
     it('readAll - Success', async () => {
       return await request(app.getHttpServer())
-        .get('/api/v1/category')
+        .get('/api/v1/university')
         .set('Authorization', 'bearer token')
         .expect(HttpStatus.OK);
     });

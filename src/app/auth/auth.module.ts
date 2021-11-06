@@ -10,10 +10,12 @@ import { UserModule } from '@app/user/user.module';
 import { Auth } from '@app/auth/auth.entity';
 import { JwtStrategy } from '@app/auth/strategies/jwt.strategy';
 import { JwtConstant } from '@constant/jwt';
+import { OAuthModule } from '@app/oauth/oauth.module';
 
 @Module({
   imports: [
     forwardRef(() => UserModule),
+    OAuthModule,
     PassportModule,
     JwtModule.register({
       secret: JwtConstant.secret,

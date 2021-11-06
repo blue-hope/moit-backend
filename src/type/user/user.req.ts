@@ -1,3 +1,4 @@
+import { SocialProvider } from '@app/oauth/oauth.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, Matches } from 'class-validator';
 
@@ -20,6 +21,10 @@ export class UserCreateRequest {
     /^(?=.*[a-zA-z]{1,})(?=.*\d{1,})(?=.*[~`!@#$%\^&*()-+=]{1,}).{8,20}$/,
   )
   password: string;
+
+  @ApiProperty()
+  @IsString()
+  provider: SocialProvider = SocialProvider.GOOGLE;
 }
 
 export class UserUpdateRequest {

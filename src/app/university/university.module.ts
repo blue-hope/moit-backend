@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from '@app/user/user.module';
 import { UniversityController } from './university.controller';
 import { University } from './university.entity';
+import { UniversityService } from './university.service';
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import { University } from './university.entity';
   ],
   exports: [],
   controllers: [UniversityController],
-  providers: [],
+  providers: [UniversityService],
 })
 export class UniversityModule {}

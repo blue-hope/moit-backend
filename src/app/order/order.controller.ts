@@ -22,7 +22,7 @@ import { ApiController } from '@util/api_controller';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { OrderReadAllResponse } from '@type/order/order.resp';
 import { OrderCreateResponse, OrderReadResponse } from '@type/order/order.resp';
-import { OrderJoinRequest } from '@type/order/order.req';
+import { OrderCreateRequest, OrderJoinRequest } from '@type/order/order.req';
 import { AuthHeader } from '@util/auth_header';
 
 @ApiTags('order')
@@ -33,17 +33,18 @@ export class OrderController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'create', description: 'Order Create' })
   @ApiHeader(AuthHeader)
+  @ApiBody({ type: OrderCreateRequest })
   @ApiCreatedResponse({ type: OrderCreateResponse })
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async create(
-    @Body() OrderCreateRequest,
+    @Body() orderCreateRequest: OrderCreateRequest,
   ): Promise<OrderCreateResponse | void> {}
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'read', description: 'Order Read' })
+  @ApiOperation({ summary: 'readAll', description: 'Order ReadAll' })
   @ApiHeader(AuthHeader)
   @ApiOkResponse({ type: OrderReadAllResponse })
   @ApiBadRequestResponse()

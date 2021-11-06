@@ -19,6 +19,9 @@ import {
   BadRequestInterceptor,
   NotFoundInterceptor,
 } from '@interceptor/typeorm.interceptor';
+import { SocialProvider } from '@app/oauth/oauth.enum';
+import { of } from 'rxjs';
+import { MockAxiosResponse } from '@util/mock_axios_response';
 
 describe('AuthController', () => {
   let app: INestApplication;
@@ -53,6 +56,7 @@ describe('AuthController', () => {
       name: 'name',
       password: password,
       phoneNumber: '010-1234-5678',
+      provider: SocialProvider.LOCAL,
     });
     await userService.readByEmail(email)!;
 
@@ -83,6 +87,81 @@ describe('AuthController', () => {
         .post('/api/v1/auth/login/')
         .send(data)
         .expect(HttpStatus.UNAUTHORIZED);
+    });
+  });
+
+  describe('/api/v1/auth/login/social/google/', () => {
+    it('social login - Success', async () => {
+      jest.spyOn(httpService, 'post').mockImplementationOnce(() =>
+        of(
+          MockAxiosResponse({
+            access_token: 'mock_access_token',
+            expire_in: 1000,
+            refresh_token: 'mock_refresh_token',
+            scope: 'mock_scope',
+            token_type: 'jwt',
+            id_token: 'mock_id_token',
+          }),
+        ),
+      );
+      jest.spyOn(httpService, 'get').mockImplementationOnce(() =>
+        of(
+          MockAxiosResponse({
+            email: email,
+            name: 'name',
+          }),
+        ),
+      );
+      const data = {
+        code: 'code',
+        redirectUri: 'http://re.direct.uri/re.direct.uri/',
+      };
+      return await request(app.getHttpServer())
+        .post('/api/v1/auth/login/social/google/')
+        .send(data)
+        .expect(HttpStatus.OK);
+    });
+
+    it('social login - Success (created)', async () => {
+      jest.spyOn(httpService, 'post').mockImplementationOnce(() =>
+        of(
+          MockAxiosResponse({
+            access_token: 'mock_access_token',
+            expire_in: 1000,
+            refresh_token: 'mock_refresh_token',
+            scope: 'mock_scope',
+            token_type: 'jwt',
+            id_token: 'mock_id_token',
+          }),
+        ),
+      );
+      jest.spyOn(httpService, 'get').mockImplementationOnce(() =>
+        of(
+          MockAxiosResponse({
+            email: 'other@email.com',
+            name: 'name',
+          }),
+        ),
+      );
+      const data = {
+        code: 'code',
+        redirectUri: 'http://re.direct.uri/re.direct.uri/',
+      };
+      return await request(app.getHttpServer())
+        .post('/api/v1/auth/login/social/google/')
+        .send(data)
+        .expect(HttpStatus.OK);
+    });
+
+    it('social login - Fail', async () => {
+      const data = {
+        code: 'code',
+        redirectUri: 'http://re.direct.uri/re.direct.uri/',
+      };
+      return await request(app.getHttpServer())
+        .post('/api/v1/auth/login/social/google/')
+        .send(data)
+        .expect(HttpStatus.BAD_REQUEST);
     });
   });
 });

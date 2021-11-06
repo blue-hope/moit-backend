@@ -7,6 +7,7 @@ import { User } from '@app/user/user.entity';
 import { UserService } from '@app/user/user.service';
 import { UserController } from '@app/user/user.controller';
 import { TestConnectionModule } from '@config/test/test.config';
+import { SocialProvider } from '@app/oauth/oauth.enum';
 
 describe('UserService', () => {
   let app: TestingModule;
@@ -32,6 +33,7 @@ describe('UserService', () => {
       name: 'name',
       password: 'password',
       phoneNumber: '010-1234-5678',
+      provider: SocialProvider.LOCAL,
     });
     expect(result).toBeInstanceOf(User);
     expect(result).toMatchObject({
@@ -48,6 +50,7 @@ describe('UserService', () => {
         name: 'name',
         password: 'password',
         phoneNumber: '010-1234-5678',
+        provider: SocialProvider.LOCAL,
       });
     } catch (e) {
       expect(e).toBeInstanceOf(QueryFailedError);
@@ -94,6 +97,7 @@ describe('UserService', () => {
       name: 'name',
       password: 'password',
       phoneNumber: '010-1234-5678',
+      provider: SocialProvider.LOCAL,
     });
     expect(result).toBeInstanceOf(User);
     const user = await service.readByEmail(email)!;

@@ -18,7 +18,7 @@ export class PurchasementController {
   constructor() {}
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'read', description: 'Purchasement Read' })
+  @ApiOperation({ summary: 'readAll', description: 'Purchasement ReadAll' })
   @ApiHeader(AuthHeader)
   @ApiBody({ type: PurchasementReadAllResponse })
   @ApiOkResponse()

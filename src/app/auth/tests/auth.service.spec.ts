@@ -10,6 +10,7 @@ import { User } from '@app/user/user.entity';
 import { UserService } from '@app/user/user.service';
 import { JwtConstant } from '@constant/jwt';
 import { TestConnectionModule } from '@config/test/test.config';
+import { SocialProvider } from '@app/oauth/oauth.enum';
 
 describe('AuthService', () => {
   let app: TestingModule;
@@ -43,6 +44,7 @@ describe('AuthService', () => {
       name: 'name',
       password: password,
       phoneNumber: '010-1234-5678',
+      provider: SocialProvider.LOCAL,
     });
     user = await userService.readByEmail(email)!;
   });

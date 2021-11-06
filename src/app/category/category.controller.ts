@@ -19,7 +19,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'read', description: 'Category Read' })
+  @ApiOperation({ summary: 'readAll', description: 'Category ReadAll' })
   @ApiHeader(AuthHeader)
   @ApiBody({ type: CategoryReadAllResponse })
   @ApiOkResponse()
