@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "539820303388.dkr.ecr.ap-northeast-2.amazonaws.com/:latest",
+    "Name": "539820303388.dkr.ecr.ap-northeast-2.amazonaws.com/moit_server/:latest",
     "Update": "true"
   },
   "Ports": [
