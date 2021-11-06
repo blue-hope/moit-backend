@@ -1,12 +1,12 @@
-name: CI/CD
+name: DEPLOY
 on:
   push:
     branches:
       - main
 
 jobs:
-  cicd:
-    name: cicd
+  deploy:
+    name: deployment
     runs-on: ubuntu-latest
 
     steps:
