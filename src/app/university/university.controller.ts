@@ -23,7 +23,6 @@ export class UniversityController {
   constructor(private readonly universityService: UniversityService) {}
 
   @ApiOperation({ summary: 'read', description: 'University ReadAll' })
-  @ApiHeader(AuthHeader)
   @ApiOkResponse({
     type: UniversityReadAllResponse,
   })
