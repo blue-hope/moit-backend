@@ -11,6 +11,16 @@ let testConfig =
 
 const defaultEntity = [];
 
+const productionTypeOrmConfig =
+  process.env.TYPEORM == 'true'
+    ? {
+        migrations: ['src/migration/*.ts'],
+        cli: {
+          migrationsDir: 'src/migration',
+        },
+      }
+    : {};
+
 if (node_env === 'local' || node_env === undefined) {
   databaseConfig = {
     ...databaseConfig,
@@ -23,10 +33,7 @@ if (node_env === 'local' || node_env === undefined) {
 } else if (node_env === 'production') {
   databaseConfig = {
     ...databaseConfig,
-    migrations: ['src/migration/*.ts'],
-    cli: {
-      migrationsDir: 'src/migration',
-    },
+    ...productionTypeOrmConfig,
     entities: ['dist/app/**/*.entity.js', ...defaultEntity],
   };
 } else if (node_env === 'test') {

@@ -15,11 +15,10 @@
     "test:watch": "NODE_ENV=test jest --watch",
     "test:cov": "NODE_ENV=test jest --coverage",
     "typeorm:local": "NODE_ENV=local ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "typeorm:prod": "NODE_ENV=production ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "typeorm:prod": "NODE_ENV=production TYPEORM=true ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "typeorm:test": "NODE_ENV=test ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
-    "@casl/ability": "^5.1.2",
     "@nestjs/cli": "^7.5.1",
     "@nestjs/common": "^7.6.5",
     "@nestjs/core": "^7.5.1",
