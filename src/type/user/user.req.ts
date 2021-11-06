@@ -1,6 +1,6 @@
 import { SocialProvider } from '@app/oauth/oauth.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, Matches } from 'class-validator';
+import { IsNumber, IsString, Matches } from 'class-validator';
 
 export class UserCreateRequest {
   @ApiProperty()
@@ -19,6 +19,10 @@ export class UserCreateRequest {
   @IsString()
   @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
   password: string;
+
+  @ApiProperty()
+  @IsNumber()
+  universityId: number;
 
   provider: SocialProvider;
 }

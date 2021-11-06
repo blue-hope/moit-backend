@@ -1,13 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EntityNotFoundError, QueryFailedError } from 'typeorm';
-import { MustBeEntityError } from 'typeorm/error/MustBeEntityError';
-import { AuthModule } from '@app/auth/auth.module';
 import { AuthService } from '@app/auth/auth.service';
 import { User } from '@app/user/user.entity';
 import { UserService } from '@app/user/user.service';
-import { UserController } from '@app/user/user.controller';
-import { TestConnectionModule } from '@config/test/test.config';
 import { SocialProvider } from '@app/oauth/oauth.enum';
+import { University } from '@app/university/university.entity';
+import { createUniversity } from '@util/fixtures/create_university_fixtures';
+import { AppModule } from '@app/app.module';
 
 describe('UserService', () => {
   let app: TestingModule;
@@ -15,16 +14,16 @@ describe('UserService', () => {
   let authService: AuthService;
 
   let email: string;
+  let university: University;
 
   beforeAll(async () => {
     app = await Test.createTestingModule({
-      imports: [AuthModule, ...(await TestConnectionModule('all'))],
-      controllers: [UserController],
-      providers: [UserService],
+      imports: [AppModule],
     }).compile();
     service = app.get<UserService>(UserService);
     authService = app.get<AuthService>(AuthService);
     email = 'any@email.com';
+    university = await createUniversity();
   });
 
   it('create - Success', async () => {
@@ -33,6 +32,7 @@ describe('UserService', () => {
       name: 'name',
       password: 'password',
       phoneNumber: '010-1234-5678',
+      universityId: university.id,
       provider: SocialProvider.LOCAL,
     });
     expect(result).toBeInstanceOf(User);
@@ -50,6 +50,7 @@ describe('UserService', () => {
         name: 'name',
         password: 'password',
         phoneNumber: '010-1234-5678',
+        universityId: university.id,
         provider: SocialProvider.LOCAL,
       });
     } catch (e) {
@@ -97,6 +98,7 @@ describe('UserService', () => {
       name: 'name',
       password: 'password',
       phoneNumber: '010-1234-5678',
+      universityId: university.id,
       provider: SocialProvider.LOCAL,
     });
     expect(result).toBeInstanceOf(User);

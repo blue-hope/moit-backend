@@ -6,6 +6,8 @@ import { TestConnectionModule } from '@config/test/test.config';
 import { CategoryService } from '../category.service';
 import { Category } from '../category.entity';
 import { SocialProvider } from '@app/oauth/oauth.enum';
+import { createUser } from '@util/fixtures/create_user_fixture';
+import { AppModule } from '@app/app.module';
 
 describe('CategoryService', () => {
   let app: TestingModule;
@@ -13,26 +15,14 @@ describe('CategoryService', () => {
   let userService: UserService;
 
   let user: User;
-  let password: string;
 
   beforeAll(async () => {
     app = await Test.createTestingModule({
-      imports: [UserModule, ...(await TestConnectionModule('all'))],
-      providers: [CategoryService],
+      imports: [AppModule],
     }).compile();
     service = app.get<CategoryService>(CategoryService);
     userService = app.get<UserService>(UserService);
-
-    password = 'password';
-    const email = 'any@email.com';
-    await userService.create({
-      email: email,
-      name: 'name',
-      password: password,
-      phoneNumber: '010-1234-5678',
-      provider: SocialProvider.LOCAL,
-    });
-    user = await userService.readByEmail(email)!;
+    user = await createUser(app);
   });
 
   it('readAll - Success', async () => {

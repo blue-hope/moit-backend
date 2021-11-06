@@ -1,9 +1,8 @@
-import { Get, HttpCode, HttpStatus, Request, UseGuards } from '@nestjs/common';
+import { Get, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import {
   ApiTags,
   ApiOkResponse,
   ApiUnauthorizedResponse,
-  ApiBody,
   ApiOperation,
   ApiHeader,
 } from '@nestjs/swagger';

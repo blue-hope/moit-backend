@@ -9,6 +9,9 @@ import {
   BadRequestInterceptor,
   NotFoundInterceptor,
 } from '@interceptor/typeorm.interceptor';
+import { createUniversity } from '@util/fixtures/create_university_fixtures';
+import { University } from '@app/university/university.entity';
+import { AppModule } from '@app/app.module';
 
 jest.mock('jsonwebtoken', () => ({
   verify: jest.fn((token, secretOrKey, options, callback) => {
@@ -21,18 +24,18 @@ jest.mock('jsonwebtoken', () => ({
 
 describe('UserController', () => {
   let app: INestApplication;
+  let university: University;
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
-      imports: [AuthModule, ...(await TestConnectionModule('all'))],
-      controllers: [UserController],
-      providers: [UserService],
+      imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     app.useGlobalInterceptors(new BadRequestInterceptor());
     app.useGlobalInterceptors(new NotFoundInterceptor());
     await app.init();
+    university = await createUniversity();
   });
 
   describe('/api/v1/user', () => {
@@ -42,6 +45,7 @@ describe('UserController', () => {
         password: 'password',
         name: 'name',
         phoneNumber: '010-1234-5678',
+        universityId: university.id,
       };
       return await request(app.getHttpServer())
         .post('/api/v1/user')

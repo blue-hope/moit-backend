@@ -7,17 +7,22 @@ import {
 import { User } from '@app/user/user.entity';
 import { AuthService } from '@app/auth/auth.service';
 import { UserCreateRequest, UserUpdateRequest } from '@type/user/user.req';
+import { UniversityService } from '@app/university/university.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
+    private readonly universityService: UniversityService,
   ) {}
 
   async create(CreateRequest: UserCreateRequest): Promise<User> {
     const { password, ...userDto } = CreateRequest;
-    const user = await User.create(userDto).save();
+    const user = await User.create({
+      ...userDto,
+      university: this.universityService.readById(userDto.universityId),
+    }).save();
     await this.authService.create(user, password);
     return user;
   }

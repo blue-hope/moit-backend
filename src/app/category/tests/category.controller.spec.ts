@@ -9,6 +9,8 @@ import {
 } from '@interceptor/typeorm.interceptor';
 import { CategoryController } from '../category.controller';
 import { CategoryService } from '../category.service';
+import { createUser } from '@util/fixtures/create_user_fixture';
+import { AppModule } from '@app/app.module';
 
 jest.mock('jsonwebtoken', () => ({
   verify: jest.fn((token, secretOrKey, options, callback) => {
@@ -24,23 +26,13 @@ describe('CategoryController', () => {
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
-      imports: [AuthModule, ...(await TestConnectionModule('all'))],
-      controllers: [CategoryController],
-      providers: [CategoryService],
+      imports: [AppModule],
     }).compile();
-
     app = moduleFixture.createNestApplication();
     app.useGlobalInterceptors(new BadRequestInterceptor());
     app.useGlobalInterceptors(new NotFoundInterceptor());
-
-    const data = {
-      email: 'any@email.com',
-      password: 'password',
-      name: 'name',
-      phoneNumber: '010-1234-5678',
-    };
     await app.init();
-    await request(app.getHttpServer()).post('/api/v1/user').send(data);
+    await createUser(moduleFixture);
   });
 
   describe('/api/v1/category', () => {

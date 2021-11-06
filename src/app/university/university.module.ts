@@ -10,7 +10,7 @@ import { UniversityService } from './university.service';
     forwardRef(() => UserModule),
     TypeOrmModule.forFeature([University]),
   ],
-  exports: [],
+  exports: [UniversityService],
   controllers: [UniversityController],
   providers: [UniversityService],
 })
