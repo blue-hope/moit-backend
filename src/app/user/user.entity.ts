@@ -73,7 +73,7 @@ export class User extends BaseEntityImpl {
   @ApiProperty()
   @IsNumber()
   @Column()
-  point: string;
+  point: number;
 
   @ApiProperty()
   @IsDate()

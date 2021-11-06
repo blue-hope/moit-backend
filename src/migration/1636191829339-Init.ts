@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class Init1636187429688 implements MigrationInterface {
-    name = 'Init1636187429688'
+export class Init1636191829339 implements MigrationInterface {
+    name = 'Init1636191829339'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query("CREATE TABLE `category` (`id` int NOT NULL AUTO_INCREMENT, `name` varchar(255) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
@@ -15,7 +15,7 @@ export class Init1636187429688 implements MigrationInterface {
         await queryRunner.query("CREATE TABLE `zone` (`id` int NOT NULL AUTO_INCREMENT, `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `university_id` int NULL, `restaurant_id` int NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `university` (`id` int NOT NULL AUTO_INCREMENT, `name` varchar(255) NOT NULL, `region_id` int NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `region` (`id` int NOT NULL AUTO_INCREMENT, `name` varchar(255) NOT NULL, `latitude` int NOT NULL, `longitude` int NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
-        await queryRunner.query("CREATE TABLE `user` (`id` int NOT NULL AUTO_INCREMENT, `email` varchar(255) NOT NULL, `name` varchar(255) NOT NULL, `phone_number` varchar(255) NOT NULL, `point` varchar(255) NOT NULL, `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `region_id` int NULL, `university_id` int NULL, UNIQUE INDEX `IDX_e12875dfb3b1d92d7d7c5377e2` (`email`), UNIQUE INDEX `IDX_01eea41349b6c9275aec646eee` (`phone_number`), PRIMARY KEY (`id`)) ENGINE=InnoDB");
+        await queryRunner.query("CREATE TABLE `user` (`id` int NOT NULL AUTO_INCREMENT, `email` varchar(255) NOT NULL, `name` varchar(255) NOT NULL, `phone_number` varchar(255) NOT NULL, `point` int NOT NULL, `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `region_id` int NULL, `university_id` int NULL, UNIQUE INDEX `IDX_e12875dfb3b1d92d7d7c5377e2` (`email`), UNIQUE INDEX `IDX_01eea41349b6c9275aec646eee` (`phone_number`), PRIMARY KEY (`id`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `auth` (`id` int NOT NULL AUTO_INCREMENT, `password` varchar(255) NOT NULL, `salt` varchar(255) NOT NULL, `user_id` int NULL, UNIQUE INDEX `REL_9922406dc7d70e20423aeffadf` (`user_id`), PRIMARY KEY (`id`)) ENGINE=InnoDB");
         await queryRunner.query("ALTER TABLE `fee` ADD CONSTRAINT `FK_1415ccec8a50551ed3baad43d72` FOREIGN KEY (`restaurant_id`) REFERENCES `restaurant`(`id`) ON DELETE CASCADE ON UPDATE CASCADE");
         await queryRunner.query("ALTER TABLE `participant` ADD CONSTRAINT `FK_cf9113dc486e9d53e33807cf6f7` FOREIGN KEY (`order_id`) REFERENCES `order`(`id`) ON DELETE CASCADE ON UPDATE CASCADE");
