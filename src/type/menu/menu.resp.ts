@@ -7,10 +7,6 @@ export class MenuReadResponse {
   id: number;
 
   @ApiProperty()
-  @IsNumber()
-  restaurantId: number;
-
-  @ApiProperty()
   @IsString()
   name: string;
 

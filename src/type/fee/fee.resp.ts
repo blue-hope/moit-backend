@@ -8,10 +8,6 @@ export class FeeReadResponse {
 
   @ApiProperty()
   @IsNumber()
-  restaurantId: number;
-
-  @ApiProperty()
-  @IsNumber()
   priceStart: number;
 
   @ApiProperty()

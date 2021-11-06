@@ -9,7 +9,6 @@ export async function orderConverter(order: Order): Promise<OrderReadResponse> {
   const participants = await order.participants;
   const orderMenus = await order.orderMenus;
   const fee = await order.fee;
-  console.log(orderMenus[0].count, (await orderMenus[0].menu).price);
   return {
     ...order,
     restaurantId: restaurant.id,
