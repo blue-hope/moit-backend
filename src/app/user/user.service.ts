@@ -19,9 +19,14 @@ export class UserService {
 
   async create(CreateRequest: UserCreateRequest): Promise<User> {
     const { password, ...userDto } = CreateRequest;
+    const university = await this.universityService.readById(
+      userDto.universityId,
+    );
+    const region = await university.region;
     const user = await User.create({
       ...userDto,
-      university: this.universityService.readById(userDto.universityId),
+      university: Promise.resolve(university),
+      region: Promise.resolve(region),
     }).save();
     await this.authService.create(user, password);
     return user;
