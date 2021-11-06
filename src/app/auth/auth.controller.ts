@@ -21,7 +21,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @ApiOperation({ summary: 'login', description: 'User Login' })
   @ApiBody({ type: LoginRequest })
-  @ApiOkResponse()
+  @ApiOkResponse({ type: LoginResponse })
   @ApiUnauthorizedResponse()
   @HttpCode(HttpStatus.OK)
   @Post('login')

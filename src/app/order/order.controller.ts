@@ -16,12 +16,14 @@ import {
   ApiOperation,
   ApiCreatedResponse,
   ApiBadRequestResponse,
+  ApiHeader,
 } from '@nestjs/swagger';
 import { ApiController } from '@util/api_controller';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { OrderReadAllResponse } from '@type/order/order.resp';
 import { OrderCreateResponse, OrderReadResponse } from '@type/order/order.resp';
 import { OrderJoinRequest } from '@type/order/order.req';
+import { AuthHeader } from '@util/auth_header';
 
 @ApiTags('order')
 @ApiController('order')
@@ -30,6 +32,7 @@ export class OrderController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'create', description: 'Order Create' })
+  @ApiHeader(AuthHeader)
   @ApiCreatedResponse({ type: OrderCreateResponse })
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
@@ -41,6 +44,7 @@ export class OrderController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'read', description: 'Order Read' })
+  @ApiHeader(AuthHeader)
   @ApiOkResponse({ type: OrderReadAllResponse })
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
@@ -53,6 +57,7 @@ export class OrderController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'read', description: 'Order Read' })
+  @ApiHeader(AuthHeader)
   @ApiOkResponse({ type: OrderReadResponse })
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
@@ -62,6 +67,7 @@ export class OrderController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'join', description: 'Order join as participant' })
+  @ApiHeader(AuthHeader)
   @ApiOkResponse({ type: OrderReadResponse })
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
