@@ -15,9 +15,10 @@ import { Menu } from '@app/menu/menu.entity';
 import { Fee } from '@app/fee/fee.entity';
 import { Order } from '@app/order/order.entity';
 import { Zone } from '@app/zone/zone.entity';
+import { BaseEntityImpl } from '@util/base_entity_impl';
 
 @Entity()
-export class Restaurant {
+export class Restaurant extends BaseEntityImpl {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
@@ -70,6 +71,11 @@ export class Restaurant {
     name: 'close_at',
   })
   closeAt: Date;
+
+  @ApiProperty()
+  @IsString()
+  @Column()
+  imageKey: string;
 
   @ApiProperty()
   @IsDate()

@@ -1,16 +1,13 @@
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { AuthModule } from '@app/auth/auth.module';
-import { TestConnectionModule } from '@config/test/test.config';
 import {
   BadRequestInterceptor,
   NotFoundInterceptor,
 } from '@interceptor/typeorm.interceptor';
-import { CategoryController } from '../category.controller';
-import { CategoryService } from '../category.service';
 import { createUser } from '@util/fixtures/create_user_fixture';
 import { AppModule } from '@app/app.module';
+import { createCategory } from '@util/fixtures/create_category_fixture';
 
 jest.mock('jsonwebtoken', () => ({
   verify: jest.fn((token, secretOrKey, options, callback) => {
@@ -33,6 +30,7 @@ describe('CategoryController', () => {
     app.useGlobalInterceptors(new NotFoundInterceptor());
     await app.init();
     await createUser(moduleFixture);
+    await createCategory();
   });
 
   describe('/api/v1/category', () => {

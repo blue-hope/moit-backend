@@ -17,9 +17,10 @@ import { User } from '@app/user/user.entity';
 import { Participant } from '@app/participant/participant.entity';
 import { OrderMenu } from '@app/orderMenu/order_menu.entity';
 import { Purchasement } from '@app/purchasement/purchasement.entity';
+import { BaseEntityImpl } from '@util/base_entity_impl';
 
 @Entity()
-export class Order {
+export class Order extends BaseEntityImpl {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;

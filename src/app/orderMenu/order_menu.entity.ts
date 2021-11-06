@@ -10,9 +10,10 @@ import { Order } from '@app/order/order.entity';
 import { IsDate, IsNumber } from 'class-validator';
 import { CastedColumn } from '@config/test/test.sqlite';
 import { Menu } from '@app/menu/menu.entity';
+import { BaseEntityImpl } from '@util/base_entity_impl';
 
 @Entity()
-export class OrderMenu {
+export class OrderMenu extends BaseEntityImpl {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;

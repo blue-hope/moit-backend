@@ -9,9 +9,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 import { Restaurant } from '@app/restaurant/restaurant.entity';
 import { OrderMenu } from '@app/orderMenu/order_menu.entity';
+import { BaseEntityImpl } from '@util/base_entity_impl';
 
 @Entity()
-export class Menu {
+export class Menu extends BaseEntityImpl {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;

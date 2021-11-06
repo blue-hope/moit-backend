@@ -16,6 +16,7 @@ import {
 import { AuthHeader } from '@util/auth_header';
 import { UniversityService } from './university.service';
 import { RequestContext } from '@type/common/common.dto';
+import { serialize, serializeAll } from '@util/serialize';
 
 @ApiTags('university')
 @ApiController('university')
@@ -31,7 +32,7 @@ export class UniversityController {
   @Get()
   async readAll(): Promise<UniversityReadAllResponse> {
     return {
-      universities: await this.universityService.readAll(),
+      universities: serializeAll(await this.universityService.readAll()),
     };
   }
 
@@ -46,6 +47,6 @@ export class UniversityController {
   @HttpCode(HttpStatus.OK)
   @Get('me')
   async read(@Request() req: RequestContext): Promise<UniversityReadResponse> {
-    return await req.user.university;
+    return serialize(await req.user.university);
   }
 }

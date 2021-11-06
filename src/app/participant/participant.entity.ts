@@ -10,9 +10,10 @@ import { User } from '@app/user/user.entity';
 import { Order } from '@app/order/order.entity';
 import { IsDate } from 'class-validator';
 import { CastedColumn } from '@config/test/test.sqlite';
+import { BaseEntityImpl } from '@util/base_entity_impl';
 
 @Entity()
-export class Participant {
+export class Participant extends BaseEntityImpl {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;

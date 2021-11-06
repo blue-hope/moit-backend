@@ -23,6 +23,7 @@ export class OAuthBaseService implements IOAuthBaseService {
         email: payload.email,
         name: payload.name || provider,
         phoneNumber: '', // TODO: Oauth phone number
+        universityId: 1, // TODO: Oauth university id
         password: 'password',
         provider: provider,
       }));

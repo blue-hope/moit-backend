@@ -33,6 +33,7 @@ import {
 } from '@type/user/user.resp';
 import { AuthHeader } from '@util/auth_header';
 import { SocialProvider } from '@app/oauth/oauth.enum';
+import { serialize } from '@util/serialize';
 
 @ApiTags('user')
 @ApiController('user')
@@ -68,16 +69,12 @@ export class UserController {
   async read(@Request() req: RequestContext): Promise<UserReadResponse> {
     const user = req.user;
     const manners = await (await user.manners).map((manner) => manner.score);
-    return {
+    return serialize({
       ...user,
-      manner:
-        manners.reduce(
-          (prevScore, currentScore) => prevScore + currentScore,
-          0,
-        ) / manners.length,
+      manner: manners.reduce((prev, cur) => prev + cur, 0) / manners.length,
       regionId: (await user.region)?.id,
       universityId: (await user.university)?.id,
-    };
+    });
   }
 
   @UseGuards(JwtAuthGuard)

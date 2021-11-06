@@ -10,9 +10,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsNumber } from 'class-validator';
 import { Restaurant } from '@app/restaurant/restaurant.entity';
 import { CastedColumn } from '@config/test/test.sqlite';
+import { BaseEntityImpl } from '@util/base_entity_impl';
 
 @Entity()
-export class Fee {
+export class Fee extends BaseEntityImpl {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
@@ -26,17 +27,17 @@ export class Fee {
 
   @ApiProperty()
   @IsNumber()
-  @Column({ name: 'price_start' })
+  @Column()
   priceStart: number;
 
   @ApiProperty()
   @IsNumber()
-  @Column({ name: 'price_end' })
+  @Column()
   priceEnd: number;
 
   @ApiProperty()
   @IsNumber()
-  @Column({ name: 'delivery_fee' })
+  @Column()
   deliveryFee: number;
 
   @ApiProperty()

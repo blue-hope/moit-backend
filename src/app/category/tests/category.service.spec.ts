@@ -1,13 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserModule } from '@app/user/user.module';
 import { User } from '@app/user/user.entity';
 import { UserService } from '@app/user/user.service';
-import { TestConnectionModule } from '@config/test/test.config';
 import { CategoryService } from '../category.service';
 import { Category } from '../category.entity';
-import { SocialProvider } from '@app/oauth/oauth.enum';
 import { createUser } from '@util/fixtures/create_user_fixture';
 import { AppModule } from '@app/app.module';
+import { createCategory } from '@util/fixtures/create_category_fixture';
 
 describe('CategoryService', () => {
   let app: TestingModule;
@@ -15,6 +13,7 @@ describe('CategoryService', () => {
   let userService: UserService;
 
   let user: User;
+  let category: Category;
 
   beforeAll(async () => {
     app = await Test.createTestingModule({
@@ -23,6 +22,7 @@ describe('CategoryService', () => {
     service = app.get<CategoryService>(CategoryService);
     userService = app.get<UserService>(UserService);
     user = await createUser(app);
+    category = await createCategory();
   });
 
   it('readAll - Success', async () => {
@@ -33,8 +33,9 @@ describe('CategoryService', () => {
       name: '햄버거',
     }).save();
     const result = await service.readAll();
-    expect(result).toHaveLength(2);
-    expect(result[0]).toEqual(category1);
-    expect(result[1]).toEqual(category2);
+    expect(result).toHaveLength(3);
+    expect(result[0]).toEqual(category);
+    expect(result[1]).toEqual(category1);
+    expect(result[2]).toEqual(category2);
   });
 });

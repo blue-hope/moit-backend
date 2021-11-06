@@ -5,7 +5,7 @@ import { User } from '@app/user/user.entity';
 import { UserService } from '@app/user/user.service';
 import { SocialProvider } from '@app/oauth/oauth.enum';
 import { University } from '@app/university/university.entity';
-import { createUniversity } from '@util/fixtures/create_university_fixtures';
+import { createUniversity } from '@util/fixtures/create_university_fixture';
 import { AppModule } from '@app/app.module';
 
 describe('UserService', () => {

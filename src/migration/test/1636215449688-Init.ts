@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class Init1636192804525 implements MigrationInterface {
-    name = 'Init1636192804525'
+export class Init1636215449688 implements MigrationInterface {
+    name = 'Init1636215449688'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "category" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL)`);
@@ -11,7 +11,7 @@ export class Init1636192804525 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "order" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "message" varchar NOT NULL, "max_participants" integer NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "restaurant_id" integer, "creator_id" integer, "fee_id" integer)`);
         await queryRunner.query(`CREATE TABLE "order_menu" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "order_id" integer, "menu_id" integer)`);
         await queryRunner.query(`CREATE TABLE "menu" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "price" integer NOT NULL, "image_key" varchar NOT NULL, "restaurant_id" integer)`);
-        await queryRunner.query(`CREATE TABLE "restaurant" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "account" varchar NOT NULL, "open_at" datetime NOT NULL, "close_at" datetime NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "category_id" integer)`);
+        await queryRunner.query(`CREATE TABLE "restaurant" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "account" varchar NOT NULL, "open_at" datetime NOT NULL, "close_at" datetime NOT NULL, "image_key" varchar NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "category_id" integer)`);
         await queryRunner.query(`CREATE TABLE "zone" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "university_id" integer, "restaurant_id" integer)`);
         await queryRunner.query(`CREATE TABLE "university" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "region_id" integer)`);
         await queryRunner.query(`CREATE TABLE "region" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "latitude" integer NOT NULL, "longitude" integer NOT NULL)`);
@@ -42,8 +42,8 @@ export class Init1636192804525 implements MigrationInterface {
         await queryRunner.query(`INSERT INTO "temporary_menu"("id", "name", "price", "image_key", "restaurant_id") SELECT "id", "name", "price", "image_key", "restaurant_id" FROM "menu"`);
         await queryRunner.query(`DROP TABLE "menu"`);
         await queryRunner.query(`ALTER TABLE "temporary_menu" RENAME TO "menu"`);
-        await queryRunner.query(`CREATE TABLE "temporary_restaurant" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "account" varchar NOT NULL, "open_at" datetime NOT NULL, "close_at" datetime NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "category_id" integer, CONSTRAINT "FK_848ac5e4e3e511560d07e36a257" FOREIGN KEY ("category_id") REFERENCES "category" ("id") ON DELETE CASCADE ON UPDATE CASCADE)`);
-        await queryRunner.query(`INSERT INTO "temporary_restaurant"("id", "name", "account", "open_at", "close_at", "created_at", "updated_at", "category_id") SELECT "id", "name", "account", "open_at", "close_at", "created_at", "updated_at", "category_id" FROM "restaurant"`);
+        await queryRunner.query(`CREATE TABLE "temporary_restaurant" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "account" varchar NOT NULL, "open_at" datetime NOT NULL, "close_at" datetime NOT NULL, "image_key" varchar NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "category_id" integer, CONSTRAINT "FK_848ac5e4e3e511560d07e36a257" FOREIGN KEY ("category_id") REFERENCES "category" ("id") ON DELETE CASCADE ON UPDATE CASCADE)`);
+        await queryRunner.query(`INSERT INTO "temporary_restaurant"("id", "name", "account", "open_at", "close_at", "image_key", "created_at", "updated_at", "category_id") SELECT "id", "name", "account", "open_at", "close_at", "image_key", "created_at", "updated_at", "category_id" FROM "restaurant"`);
         await queryRunner.query(`DROP TABLE "restaurant"`);
         await queryRunner.query(`ALTER TABLE "temporary_restaurant" RENAME TO "restaurant"`);
         await queryRunner.query(`CREATE TABLE "temporary_zone" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "university_id" integer, "restaurant_id" integer, CONSTRAINT "FK_bbf299b3c534c78fd7896f7df67" FOREIGN KEY ("university_id") REFERENCES "university" ("id") ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT "FK_5b545fdb303b329fde24d0d4279" FOREIGN KEY ("restaurant_id") REFERENCES "restaurant" ("id") ON DELETE CASCADE ON UPDATE CASCADE)`);
@@ -90,8 +90,8 @@ export class Init1636192804525 implements MigrationInterface {
         await queryRunner.query(`INSERT INTO "zone"("id", "created_at", "updated_at", "university_id", "restaurant_id") SELECT "id", "created_at", "updated_at", "university_id", "restaurant_id" FROM "temporary_zone"`);
         await queryRunner.query(`DROP TABLE "temporary_zone"`);
         await queryRunner.query(`ALTER TABLE "restaurant" RENAME TO "temporary_restaurant"`);
-        await queryRunner.query(`CREATE TABLE "restaurant" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "account" varchar NOT NULL, "open_at" datetime NOT NULL, "close_at" datetime NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "category_id" integer)`);
-        await queryRunner.query(`INSERT INTO "restaurant"("id", "name", "account", "open_at", "close_at", "created_at", "updated_at", "category_id") SELECT "id", "name", "account", "open_at", "close_at", "created_at", "updated_at", "category_id" FROM "temporary_restaurant"`);
+        await queryRunner.query(`CREATE TABLE "restaurant" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "account" varchar NOT NULL, "open_at" datetime NOT NULL, "close_at" datetime NOT NULL, "image_key" varchar NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "category_id" integer)`);
+        await queryRunner.query(`INSERT INTO "restaurant"("id", "name", "account", "open_at", "close_at", "image_key", "created_at", "updated_at", "category_id") SELECT "id", "name", "account", "open_at", "close_at", "image_key", "created_at", "updated_at", "category_id" FROM "temporary_restaurant"`);
         await queryRunner.query(`DROP TABLE "temporary_restaurant"`);
         await queryRunner.query(`ALTER TABLE "menu" RENAME TO "temporary_menu"`);
         await queryRunner.query(`CREATE TABLE "menu" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "price" integer NOT NULL, "image_key" varchar NOT NULL, "restaurant_id" integer)`);

@@ -27,7 +27,7 @@ export class OrderReadResponse {
 
   @ApiProperty()
   @IsString()
-  thumnailImageKey: string;
+  thumbnailImageKey: string;
 
   @ApiProperty()
   @IsNumber()
@@ -35,7 +35,7 @@ export class OrderReadResponse {
 
   @ApiProperty()
   @IsString()
-  message?: string;
+  message: string;
 
   @ApiProperty()
   @IsNumber()

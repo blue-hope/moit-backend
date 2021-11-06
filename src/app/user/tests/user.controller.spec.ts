@@ -9,7 +9,7 @@ import {
   BadRequestInterceptor,
   NotFoundInterceptor,
 } from '@interceptor/typeorm.interceptor';
-import { createUniversity } from '@util/fixtures/create_university_fixtures';
+import { createUniversity } from '@util/fixtures/create_university_fixture';
 import { University } from '@app/university/university.entity';
 import { AppModule } from '@app/app.module';
 

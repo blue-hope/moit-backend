@@ -17,6 +17,7 @@ import {
   ApiCreatedResponse,
   ApiBadRequestResponse,
   ApiHeader,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { ApiController } from '@util/api_controller';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
@@ -24,11 +25,15 @@ import { OrderReadAllResponse } from '@type/order/order.resp';
 import { OrderCreateResponse, OrderReadResponse } from '@type/order/order.resp';
 import { OrderCreateRequest, OrderJoinRequest } from '@type/order/order.req';
 import { AuthHeader } from '@util/auth_header';
+import { OrderService } from './order.service';
+import { Order } from './order.entity';
+import { orderConverter } from '@type/order/order.converter';
+import { serialize, serializeAll } from '@util/serialize';
 
 @ApiTags('order')
 @ApiController('order')
 export class OrderController {
-  constructor() {}
+  constructor(private readonly orderService: OrderService) {}
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'create', description: 'Order Create' })
@@ -46,6 +51,21 @@ export class OrderController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'readAll', description: 'Order ReadAll' })
   @ApiHeader(AuthHeader)
+  @ApiQuery({
+    name: 'sortBy',
+    required: true,
+    description: 'latest | remaining',
+  })
+  @ApiQuery({
+    name: 'categoryId',
+    required: false,
+    description: 'query by categoryId',
+  })
+  @ApiQuery({
+    name: 'searchKey',
+    required: true,
+    description: 'query by searchKey (blank if not exist)',
+  })
   @ApiOkResponse({ type: OrderReadAllResponse })
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
@@ -53,8 +73,19 @@ export class OrderController {
   @Get()
   async readAll(
     @Query('sortBy') sortBy: 'latest' | 'remaining',
-    @Query('categoryId') categoryId?: number,
-  ): Promise<OrderReadAllResponse | void> {}
+    @Query('categoryId') categoryId: number | undefined,
+    @Query('searchKey') searchKey: string,
+  ): Promise<OrderReadAllResponse> {
+    const orders = await this.orderService.readAllByQuery(
+      categoryId,
+      searchKey,
+    );
+    return {
+      orders: serializeAll(
+        await Promise.all(orders.map((order) => orderConverter(order))),
+      ),
+    };
+  }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'read', description: 'Order Read' })

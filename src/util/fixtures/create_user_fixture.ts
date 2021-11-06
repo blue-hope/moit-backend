@@ -1,9 +1,8 @@
-import { Auth } from '@app/auth/auth.entity';
 import { SocialProvider } from '@app/oauth/oauth.enum';
 import { User } from '@app/user/user.entity';
 import { UserService } from '@app/user/user.service';
 import { TestingModule } from '@nestjs/testing';
-import { createUniversity } from './create_university_fixtures';
+import { createUniversity } from './create_university_fixture';
 
 export async function createUser(app: TestingModule): Promise<User> {
   const university = await createUniversity();
