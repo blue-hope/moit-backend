@@ -96,16 +96,6 @@ export class OrderController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'read', description: 'Order Read' })
-  @ApiHeader(AuthHeader)
-  @ApiOkResponse({ type: OrderReadResponse })
-  @ApiBadRequestResponse()
-  @ApiUnauthorizedResponse()
-  @HttpCode(HttpStatus.OK)
-  @Get(':id')
-  async read(@Param('id') id: number): Promise<OrderReadResponse | void> {}
-
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'join', description: 'Order join as participant' })
   @ApiHeader(AuthHeader)
   @ApiOkResponse({ type: OrderReadResponse })
