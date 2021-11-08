@@ -1,12 +1,10 @@
-<a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
+# 한번에,빠르게 moit - backend
+### 제1회 Unidthon 대상 수상작
+대학생을 위한 배달 서비스
+[@Frontend](https://github.com/dionidip/moit-frontend) [@IOS](https://github.com/jaeho0718/moti-ios)
 
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/moit/moit-server/<develop>.svg?style=flat-square)](https://codecov.io/gh/moit/moit-server/)
+<img src="./assets/HomeView.png" width="250" height="500">
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation
 
